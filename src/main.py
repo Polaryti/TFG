@@ -3,17 +3,17 @@ import pandas as pd
 import sys
 import re
 
-def clean_description(df):
-    pattern = re.compile(r'\{(.*?)\}')
-    nombre_columna = 'Description'
-    return df[nombre_columna].apply(re.sub(pattern, ' ',))
+pattern = re.compile(r'\(+?(.*?)\)+?')
+
+def clean_description(txt):
+    return re.sub(pattern, '-', str(txt))
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         raise(Exception("Numero de argumentos incorrecto"))
     else:
         df = pd.read_excel(sys.argv[1])
-        df = clean_description(df)
+        df['Description'].apply(clean_description)
 
 
         
