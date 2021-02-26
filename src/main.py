@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import re
 
-pattern_comments = re.compile(r'\(+?(.*?)\)+?')
+pattern_comments = re.compile(r'\(+(.*?)\)+')
 pattern_ray = re.compile(r'-+')
 
 def clean_description(txt):
