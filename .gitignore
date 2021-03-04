@@ -129,6 +129,4 @@ dmypy.json
 .pyre/
 
 # Data folder and others
-papers/
-data/
 .vscode/
