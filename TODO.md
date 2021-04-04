@@ -1,0 +1,14 @@
+- [ ] ", "
+- [x] ??
+- [x] 271 - Vacia
+- [x] 294 - nan
+- [ ] 499, 577 - falsos directos
+
+- [ ] models i la seua entrada - veure molts models
+    - Hi ha un total de 32 models a Hugging Face dels quals 26 son per a traducció, 2 de *automatic speech recognition* i la resta de *fill-mask*. Cap de text classification
+- [ ] stemming de github - probar
+- [ ] http://snowball.tartarus.org/algorithms/catalan/stemmer.html
+- [ ] https://github.com/ccoreilly/spacy-catala
+- [x] EDA de les clases simples -> sklearn
+- [ ] métrica: recall
+- [x] sklearn -> SVM
