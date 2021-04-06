@@ -56,7 +56,7 @@ if __name__ == "__main__":
     parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
                   'tfidf__use_idf': (True, False),
                   'clf__alpha': (1e-2, 1e-3), }
-    gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1, scoring='recall_samples')
+    gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1)
     gs_clf = gs_clf.fit(df['Description'], df['Classificació'])
     print(gs_clf.best_score_)
     print(gs_clf.best_params_)

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Limpieza de los datos extra.
 
+## [1.0.1] - XX-03-2021
+### Added
+- Todavía nada...
+
 ## [1.0.0] - 30-03-2021
 ### Added
 - Limpieza de los datos.
