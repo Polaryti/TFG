@@ -20,6 +20,15 @@ def get_top_ngram(corpus, n=None):
 if __name__ == "__main__":
     df = pd.read_csv(PROCESED_DATA)
 
+    # Class count
+    data = pd.read_csv('res/simple_class_count.csv', sep='|',header=None, index_col =0)
+
+    data.plot(kind='bar')
+    plt.ylabel('Frecuencia')
+    plt.xlabel('Class')
+    plt.title('Historiograma de les clases simples')
+    plt.show()
+
     # Longitud mitjana de les mostres
     data = df['Description'].str.split().map(lambda x: len(x)).hist()
     plt.plot(data=data)
