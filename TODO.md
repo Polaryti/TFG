@@ -1,16 +1,18 @@
 - [ ] Pre-neteja més exhaustiva:
-    - [ ] ", "
+    - [x] ", "
     - [x] ??
     - [x] 271 - Vacia
     - [x] 294 - nan
-    - [ ] 499, 577 - falsos directos
+    - [x] 499, 577 - falsos directes
+    - [x] Eliminats signes de puntuació i demés simbols
 
 - [ ] models i la seua entrada - veure molts models
     - Hi ha un total de 32 models a Hugging Face dels quals 26 son per a traducció, 2 de *automatic speech recognition* i la resta de *fill-mask*. Cap de *text classification*.
 - [ ] http://snowball.tartarus.org/algorithms/catalan/stemmer.html
 - [x] https://github.com/ccoreilly/spacy-catala
     - Es una versió de fa tan sols un any pero pareix que ja no es compatible amb la versió actual de Spacy *(fent més proves)*.
-- [] *Exploration data analysis* de les clases simples:
+- [ ] *Exploration data analysis* de les clases simples:
+    - [x] Representació visual de algunes caracteristiques
     - [x] Class count
     - [ ] ANOVA
 - [x] Métrica: *recall* *(dóna errors al utilitzar-la a Sklearn amb SVM i NB)*.

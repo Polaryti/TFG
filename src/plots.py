@@ -21,7 +21,8 @@ if __name__ == "__main__":
     df = pd.read_csv(PROCESED_DATA)
 
     # Class count
-    data = pd.read_csv('res/simple_class_count.csv', sep='|',header=None, index_col =0)
+    data = pd.read_csv('res/simple_class_count.csv',
+                       sep='|', header=None, index_col=0)
 
     data.plot(kind='bar')
     plt.ylabel('Frecuencia')
@@ -64,7 +65,7 @@ if __name__ == "__main__":
         max_font_size=30,
         scale=3,
         random_state=1)
-   
+
     wordcloud = wordcloud.generate(str(df['Description']))
 
     fig = plt.figure(1, figsize=(12, 12))

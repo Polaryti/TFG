@@ -25,7 +25,7 @@ remove_digits = str.maketrans('', '', digits)
 def noise_removal(txt):
     if txt is np.NaN:
         return txt
-        
+
     txt = str(txt).strip()
     txt = txt.replace('\n', ' ').replace('\r', '')
     txt = re.sub(pattern_comments, ' ', txt)
@@ -45,7 +45,7 @@ def noise_removal(txt):
     else:
         txt = txt.strip()
         txt_aux = txt.lower()
-        if 'suport directe' in txt_aux or 'suport directe amb' in txt_aux:
+        if 'suport directe' in txt_aux or 'suport directe amb' in txt_aux or 'fals directe' in txt_aux:
             txt = np.NaN
 
     return txt
@@ -59,6 +59,7 @@ def stopwords_removal(txt):
         for stopword in CATALAN_STOPWORDS:
             txt = list(filter((stopword).__ne__, txt))
     return ' '.join(txt)
+
 
 def digits_removal(txt):
     if txt is np.NaN:
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     df['Description'].replace('', np.NaN, inplace=True)
     df.dropna(subset=['Description'], inplace=True)
     df.drop_duplicates(['Description'], inplace=True)
-    
+
     df.drop(df.columns.difference(
         ['Description', 'Classificació']), 1, inplace=True)
 
@@ -99,10 +100,9 @@ if __name__ == "__main__":
     for s in unique_cat:
         aux.add(s.strip())
 
-    print(len(df['Classificació'].unique()))
 
     print("Mostres després del preprocessament: {}".format(len(df)))
-    print("Nombre total de clases: {}".format(len(aux)))
+    print("Nombre total de clases úniques: {}".format(len(aux)))
 
     with open('res/clases.txt', 'w') as write_file:
         for clase in aux:
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     with open('res/data_f.csv', 'w') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
-                        'Classificació_01', 'Classificació_02'])
+                         'Classificació_01', 'Classificació_02'])
         for index, row in df.iterrows():
             aux = row['Classificació'].split('|')
             if len(aux) > 1:
@@ -120,4 +120,4 @@ if __name__ == "__main__":
                 ), aux[0].strip(), aux[1].strip()])
             else:
                 writer.writerow([row['Description'],
-                                row['Classificació'].strip(), '', ''])
+                                 row['Classificació'].strip(), '', ''])
