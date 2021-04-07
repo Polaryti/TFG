@@ -61,6 +61,7 @@ def compute_apostrof_index():
             line = line.split(',')
             apostrof_index[line[1]] = line[0]
 
+
 def apostrof_removal(txt):
     if txt is np.NaN:
         return txt
@@ -74,15 +75,16 @@ def apostrof_removal(txt):
                     aux_token = token.split('-\'')
 
                 if len(aux_token) > 3:
-                    #print(f"WARNING: apostrog_removal() de {aux_token}")
+                    # print(f"WARNING: apostrog_removal() de {aux_token}")
                     pass
-                
+
                 token_res = ''
                 for i_token in aux_token:
                     if len(i_token) > 0:
                         flag_is_upper = i_token.isupper()
                         flag_is_lower = i_token.islower()
-                        flag_is_capit = not flag_is_upper and not flag_is_lower and i_token[0].isupper()
+                        flag_is_capit = not flag_is_upper and not flag_is_lower and i_token[0].isupper(
+                        )
                         i_token = i_token.lower()
                         if i_token in lemmatization_index:
                             if flag_is_upper:
@@ -93,7 +95,7 @@ def apostrof_removal(txt):
                                 i_token += lemmatization_index[i_token].capitalize()
                             else:
                                 i_token += lemmatization_index[i_token]
-                
+
                 token = token_res
     return ' '.join(txt)
 
@@ -157,7 +159,7 @@ if __name__ == "__main__":
 
     df.dropna(subset=['Classificació'], inplace=True)
 
-    df['Description'] = df['Description'].apply(apostrof_removal)
+    #df['Description'] = df['Description'].apply(apostrof_removal)
     df['Description'] = df['Description'].apply(noise_removal)
     df['Description'] = df['Description'].apply(lemmatization)
     df['Description'] = df['Description'].apply(stopwords_removal)

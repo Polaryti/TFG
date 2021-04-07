@@ -38,7 +38,6 @@ if __name__ == "__main__":
     plt.title('Historiograma de les clases duals')
     plt.show()
 
-
     # (AMB STOPWORDS)
     df = pd.read_csv(PROCESED_DATA_FULL)
 
@@ -85,7 +84,6 @@ if __name__ == "__main__":
 
     plt.imshow(wordcloud)
     plt.show()
-
 
     # (SENSE STOPWORDS)
     df = pd.read_csv(PROCESED_DATA_FULL_STOPWORDS)
