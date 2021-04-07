@@ -1,5 +1,5 @@
 import pandas as pd
-from envar import PROCESED_DATA
+from envar import PROCESED_DATA_FULL_STOPWORDS, PROCESED_DATA_FULL
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -18,42 +18,102 @@ def get_top_ngram(corpus, n=None):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(PROCESED_DATA)
-
-    # Class count
-    data = pd.read_csv('res/simple_class_count.csv',
-                       sep='|', header=None, index_col=0)
+    # Class count indivudal
+    data = pd.read_csv(r'res/class_indiviudal.csv',
+                       sep='%', header=None, index_col=0)
 
     data.plot(kind='bar')
     plt.ylabel('Frecuencia')
     plt.xlabel('Class')
-    plt.title('Historiograma de les clases simples')
+    plt.title('Historiograma de les clases individuals')
     plt.show()
+
+    # Class count dual
+    data = pd.read_csv('res/class_dual.csv',
+                       sep='%', header=None, index_col=0)
+
+    data.plot(kind='bar')
+    plt.ylabel('Frecuencia')
+    plt.xlabel('Class')
+    plt.title('Historiograma de les clases duals')
+    plt.show()
+
+
+    # (AMB STOPWORDS)
+    df = pd.read_csv(PROCESED_DATA_FULL)
 
     # Longitud mitjana de les mostres
     data = df['Description'].str.split().map(lambda x: len(x)).hist()
     plt.plot(data=data)
-    plt.title("Longitud mitjana de les mostres")
+    plt.title("Longitud mitjana delst textos (AMB STOPWORDS)")
     plt.xlabel("Número de paraules")
-    plt.ylabel("Número de mostres")
+    plt.ylabel("Número de textos")
     plt.show()
 
     # Longitud mitjana de les paraules
     data = df['Description'].str.split().apply(lambda x: [len(i)
                                                           for i in x]).map(lambda x: np.mean(x)).hist()
     plt.plot(data=data)
-    plt.title("Longitud mitjana de les paraules")
+    plt.title("Longitud mitjana de les paraules (AMB STOPWORDS)")
     plt.xlabel("Longitud de la paraula")
     plt.ylabel("Número de paraules")
     plt.show()
 
-    # Bigrames més freqüents
+    # n-grames més freqüents
     n_grama = 3
     top_n_bigrams = get_top_ngram(df['Description'], n_grama)[:10]
     x, y = map(list, zip(*top_n_bigrams))
     data = sns.barplot(x=y, y=x)
     plt.plot(data=data)
-    plt.title(f"{n_grama}-grames")
+    plt.title(f"{n_grama}-grames (AMB STOPWORDS)")
+    plt.xlabel(f"Número de {n_grama}-grames")
+    plt.ylabel("Número de paraules")
+    plt.show()
+
+    # Wordcloud
+    wordcloud = WordCloud(
+        background_color='white',
+        max_words=100,
+        max_font_size=30,
+        scale=3,
+        random_state=1)
+
+    wordcloud = wordcloud.generate(str(df['Description']))
+
+    fig = plt.figure(1, figsize=(12, 12))
+    plt.axis('off')
+
+    plt.imshow(wordcloud)
+    plt.show()
+
+
+    # (SENSE STOPWORDS)
+    df = pd.read_csv(PROCESED_DATA_FULL_STOPWORDS)
+
+    # Longitud mitjana de les mostres
+    data = df['Description'].str.split().map(lambda x: len(x)).hist()
+    plt.plot(data=data)
+    plt.title("Longitud mitjana delst textos (SENSE STOPWORDS)")
+    plt.xlabel("Número de paraules")
+    plt.ylabel("Número de textos")
+    plt.show()
+
+    # Longitud mitjana de les paraules
+    data = df['Description'].str.split().apply(lambda x: [len(i)
+                                                          for i in x]).map(lambda x: np.mean(x)).hist()
+    plt.plot(data=data)
+    plt.title("Longitud mitjana de les paraules (SENSE STOPWORDS)")
+    plt.xlabel("Longitud de la paraula")
+    plt.ylabel("Número de paraules")
+    plt.show()
+
+    # n-grames més freqüents
+    n_grama = 3
+    top_n_bigrams = get_top_ngram(df['Description'], n_grama)[:10]
+    x, y = map(list, zip(*top_n_bigrams))
+    data = sns.barplot(x=y, y=x)
+    plt.plot(data=data)
+    plt.title(f"{n_grama}-grames (SENSE STOPWORDS)")
     plt.xlabel(f"Número de {n_grama}-grames")
     plt.ylabel("Número de paraules")
     plt.show()

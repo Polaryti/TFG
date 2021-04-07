@@ -1,7 +1,7 @@
 import numpy as np
 import sklearn
 import pandas as pd
-from envar import PROCESED_DATA, CATALAN_STOPWORDS
+from envar import PROCESED_DATA, PROCESED_DATA_FULL, PROCESED_DATA_FULL_STOPWORDS, CATALAN_STOPWORDS
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier
@@ -28,25 +28,27 @@ if __name__ == "__main__":
                 simple_class_count[single_class] = 0
             simple_class_count[single_class] += 1
 
-    with open(r'res/simple_class_count.csv', 'w') as w_file:
+    with open(r'res/class_indiviudal.csv', 'w') as w_file:
         simple_class_count = {k: v for k, v in sorted(
             simple_class_count.items(), key=lambda item: item[1], reverse=True)}
         for key, value in simple_class_count.items():
-            w_file.write(f'{key}, {value}\n')
+            w_file.write(f'{key}% {value}\n')
 
-    with open(r'res/combined_class_count.csv', 'w') as w_file:
+    with open(r'res/class_dual.csv', 'w') as w_file:
         combined_class_count = {k: v for k, v in sorted(
             combined_class_count.items(), key=lambda item: item[1], reverse=True)}
         for key, value in combined_class_count.items():
-            w_file.write(f'{key}, {value}\n')
+            w_file.write(f'{key}% {value}\n')
 
+
+    # (AMB STOPWORDS)
+    df = pd.read_csv(PROCESED_DATA_FULL)
     # BAG OF WORDS
     count_vect = CountVectorizer()
     X_train_counts = count_vect.fit_transform(df['Description'])
-    print(f'Paraules uniques: {X_train_counts.shape[1]}')
     tfidf_transformer = TfidfTransformer()
     X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-    print(f'Paraules uniques: {X_train_tfidf.shape}')
+    print(f'Paraules uniques (AMB STOPWORDS): {X_train_tfidf.shape[1]}')
 
     # MULTINOMIAL
     text_clf = Pipeline([('vect', CountVectorizer()),
@@ -58,8 +60,7 @@ if __name__ == "__main__":
                   'clf__alpha': (1e-2, 1e-3), }
     gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1)
     gs_clf = gs_clf.fit(df['Description'], df['Classificació'])
-    print(gs_clf.best_score_)
-    print(gs_clf.best_params_)
+    print(f"Naive bayes (AMB STOPWORDS): {gs_clf.best_score_}")
 
     # SVM
     text_clf_svm = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer(
@@ -71,5 +72,37 @@ if __name__ == "__main__":
 
     gs_clf_svm = GridSearchCV(text_clf_svm, parameters_svm, n_jobs=-1)
     gs_clf_svm = gs_clf_svm.fit(df['Description'], df['Classificació'])
-    print(gs_clf_svm.best_score_)
-    print(gs_clf_svm.best_params_)
+    print(f"SVM (AMB STOPWORDS): {gs_clf_svm.best_score_}")
+
+    # (SENSE STOPWORDS)
+    df = pd.read_csv(PROCESED_DATA_FULL_STOPWORDS)
+    # BAG OF WORDS
+    count_vect = CountVectorizer()
+    X_train_counts = count_vect.fit_transform(df['Description'])
+    tfidf_transformer = TfidfTransformer()
+    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
+    print(f'Paraules uniques (SENSE STOPWORDS): {X_train_tfidf.shape[1]}')
+
+    # MULTINOMIAL
+    text_clf = Pipeline([('vect', CountVectorizer()),
+                         ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
+    text_clf = text_clf.fit(df['Description'], df['Classificació'])
+
+    parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
+                  'tfidf__use_idf': (True, False),
+                  'clf__alpha': (1e-2, 1e-3), }
+    gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1)
+    gs_clf = gs_clf.fit(df['Description'], df['Classificació'])
+    print(f"Naive bayes (SENSE STOPWORDS): {gs_clf.best_score_}")
+
+    # SVM
+    text_clf_svm = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer(
+    )), ('clf-svm', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42))])
+
+    parameters_svm = {'vect__ngram_range': [(1, 1), (1, 2)],
+                      'tfidf__use_idf': (True, False),
+                      'clf-svm__alpha': (1e-2, 1e-3)}
+
+    gs_clf_svm = GridSearchCV(text_clf_svm, parameters_svm, n_jobs=-1)
+    gs_clf_svm = gs_clf_svm.fit(df['Description'], df['Classificació'])
+    print(f"SVM (SENSE STOPWORDS): {gs_clf_svm.best_score_}")
