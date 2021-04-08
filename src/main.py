@@ -18,6 +18,7 @@ pattern_dot_m_space = re.compile(r'\.\s+')
 pattern_m_spaces = re.compile(r'\s+')
 pattern_question_marks = re.compile(r'\?+')
 pattern_signs = re.compile(r"[¿?¡!@#$\.,'%&:\"]")
+pattern_news = re.compile(r'$\s*NEW .*$')
 
 remove_digits = str.maketrans('', '', digits)
 
@@ -117,6 +118,7 @@ def noise_removal(txt):
     txt = re.sub(pattern_question_marks, '?', txt)
     txt = re.sub(pattern_signs, '', txt)
     txt = txt.replace('/ RÈTOL/', ' ')
+    # txt = txt.replace(pattern_news, '', txt)
 
     if txt.isupper() or type(txt) != str or txt.isnumeric():
         txt = np.NaN
