@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
+import os
 import numpy as np
 import pandas as pd
 import sys
 import re
-from envar import RAW_DATA, CATALAN_STOPWORDS
+from envar import CATALAN_STOPWORDS
 import csv
 from string import digits
 
@@ -33,27 +32,27 @@ def compute_lemmatization_index():
             lemmatization_index[line[1]] = line[0]
 
 
-def lemmatization(txt):
-    if txt is np.NaN:
-        return txt
-    else:
-        txt = txt.split()
-        for token in txt:
-            flag_is_upper = token.isupper()
-            flag_is_lower = token.islower()
-            flag_is_capit = not flag_is_upper and not flag_is_lower and token[0].isupper(
-            )
-            token = token.lower()
-            if token in lemmatization_index:
-                if flag_is_upper:
-                    token = lemmatization_index[token].upper()
-                elif flag_is_lower:
-                    token = lemmatization_index[token].lower()
-                elif flag_is_capit:
-                    token = lemmatization_index[token].capitalize()
-                else:
-                    token = lemmatization_index[token]
-    return ' '.join(txt)
+# def lemmatization(txt):
+#     if txt is np.NaN:
+#         return txt
+#     else:
+#         txt = txt.split()
+#         for token in txt:
+#             flag_is_upper = token.isupper()
+#             flag_is_lower = token.islower()
+#             flag_is_capit = not flag_is_upper and not flag_is_lower and token[0].isupper(
+#             )
+#             token = token.lower()
+#             if token in lemmatization_index:
+#                 if flag_is_upper:
+#                     token = lemmatization_index[token].upper()
+#                 elif flag_is_lower:
+#                     token = lemmatization_index[token].lower()
+#                 elif flag_is_capit:
+#                     token = lemmatization_index[token].capitalize()
+#                 else:
+#                     token = lemmatization_index[token]
+#     return ' '.join(txt)
 
 
 def compute_apostrof_index():
@@ -118,7 +117,7 @@ def noise_removal(txt):
     txt = re.sub(pattern_question_marks, '?', txt)
     txt = re.sub(pattern_signs, '', txt)
     txt = txt.replace('/ RÈTOL/', ' ')
-    # txt = txt.replace(pattern_news, '', txt)
+    txt = re.sub(pattern_news, '', txt)
 
     if txt.isupper() or type(txt) != str or txt.isnumeric():
         txt = np.NaN
@@ -150,29 +149,33 @@ def digits_removal(txt):
 
 if __name__ == "__main__":
     # Generació del index de lemmatization
-    compute_lemmatization_index()
+    # compute_lemmatization_index()
 
     # Generació del index de apostros
-    compute_apostrof_index()
+    # compute_apostrof_index()
 
     # Generació del dataset sense stopwords i estadistiques de les clases
-    df = pd.read_excel(RAW_DATA)
+    df = pd.DataFrame()
+    for path, subdirs, files in os.walk('data/TextClassification/corpus'):
+        for name in files:
+            df = pd.concat([df, pd.read_excel(os.path.join(path, name))])
+
+    
     print("Mostres abans del preprocessament: {}".format(len(df)))
 
     df.dropna(subset=['Classificació'], inplace=True)
 
     #df['Description'] = df['Description'].apply(apostrof_removal)
     df['Description'] = df['Description'].apply(noise_removal)
-    # df['Description'] = df['Description'].apply(lemmatization)
+    #df['Description'] = df['Description'].apply(lemmatization)
     df['Description'] = df['Description'].apply(stopwords_removal)
-    # df['Description'] = df['Description'].apply(lemmatization)
     df['Description'] = df['Description'].apply(digits_removal)
     df['Description'].replace('', np.NaN, inplace=True)
     df.dropna(subset=['Description'], inplace=True)
     df.drop_duplicates(['Description'], inplace=True)
 
     df['Description'] = df['Description'].apply(noise_removal)
-    # df['Description'] = df['Description'].apply(lemmatization)
+    #df['Description'] = df['Description'].apply(lemmatization)
     df['Description'] = df['Description'].apply(stopwords_removal)
     df['Description'] = df['Description'].apply(digits_removal)
     df['Description'].replace('', np.NaN, inplace=True)
@@ -194,13 +197,13 @@ if __name__ == "__main__":
     print("Mostres després del preprocessament: {}".format(len(df)))
     print("Nombre total de clases úniques: {}".format(len(aux)))
 
-    with open('res/clases.csv', 'w') as write_file:
+    with open('res/clases_corpus.csv', 'w') as write_file:
         for clase in aux:
             write_file.write("{}\n".format(clase))
 
-    df.to_csv('res/data.csv', index=False)
+    df.to_csv('res/data_corpus.csv', index=False)
 
-    with open('res/data_full_stopwords.csv', 'w') as w_file:
+    with open('res/data_corpues_full_stopwords.csv', 'w') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
                          'Classificació_01', 'Classificació_02'])
@@ -233,7 +236,7 @@ if __name__ == "__main__":
     df.drop(df.columns.difference(
         ['Description', 'Classificació']), 1, inplace=True)
 
-    with open('res/data_full.csv', 'w') as w_file:
+    with open('res/data_corpus_full.csv', 'w') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
                          'Classificació_01', 'Classificació_02'])
@@ -245,3 +248,5 @@ if __name__ == "__main__":
             else:
                 writer.writerow([row['Description'],
                                  row['Classificació'].strip(), row['Classificació'].strip(), ''])
+
+
