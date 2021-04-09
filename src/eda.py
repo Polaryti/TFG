@@ -9,6 +9,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import recall_score
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     df = pd.read_csv(PROCESED_DATA)
@@ -91,8 +93,12 @@ if __name__ == "__main__":
     parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
                   'tfidf__use_idf': (True, False),
                   'clf__alpha': (1e-2, 1e-3), }
-    gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1)
+    gs_clf = GridSearchCV(text_clf, parameters, n_jobs=-1, scoring="recall_macro")
     gs_clf = gs_clf.fit(df['Description'], df['Classificació'])
+
+    confusion_matrix(gs_clf.predict(df['Description']), df['Classificació'])
+    plt.show()
+    disp = plot_confusion_matrix(gs_clf, df['Description'], df['Classificació'])
     print(f"Naive bayes (SENSE STOPWORDS): {gs_clf.best_score_}")
 
     # SVM
@@ -103,6 +109,6 @@ if __name__ == "__main__":
                       'tfidf__use_idf': (True, False),
                       'clf-svm__alpha': (1e-2, 1e-3)}
 
-    gs_clf_svm = GridSearchCV(text_clf_svm, parameters_svm, n_jobs=-1)
+    gs_clf_svm = GridSearchCV(text_clf_svm, parameters_svm, n_jobs=-1, scoring="recall_macro")
     gs_clf_svm = gs_clf_svm.fit(df['Description'], df['Classificació'])
     print(f"SVM (SENSE STOPWORDS): {gs_clf_svm.best_score_}")
