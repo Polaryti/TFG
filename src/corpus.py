@@ -62,42 +62,42 @@ def compute_apostrof_index():
             apostrof_index[line[1]] = line[0]
 
 
-def apostrof_removal(txt):
-    if txt is np.NaN:
-        return txt
-    else:
-        txt = txt.split()
-        for token in txt:
-            if '-' in token or '\'' in token:
-                if '-' in token:
-                    aux_token = token.split('-')
-                else:
-                    aux_token = token.split('-\'')
+# def apostrof_removal(txt):
+#     if txt is np.NaN:
+#         return txt
+#     else:
+#         txt = txt.split()
+#         for token in txt:
+#             if '-' in token or '\'' in token:
+#                 if '-' in token:
+#                     aux_token = token.split('-')
+#                 else:
+#                     aux_token = token.split('-\'')
 
-                if len(aux_token) > 3:
-                    # print(f"WARNING: apostrog_removal() de {aux_token}")
-                    pass
+#                 if len(aux_token) > 3:
+#                     # print(f"WARNING: apostrog_removal() de {aux_token}")
+#                     pass
 
-                token_res = ''
-                for i_token in aux_token:
-                    if len(i_token) > 0:
-                        flag_is_upper = i_token.isupper()
-                        flag_is_lower = i_token.islower()
-                        flag_is_capit = not flag_is_upper and not flag_is_lower and i_token[0].isupper(
-                        )
-                        i_token = i_token.lower()
-                        if i_token in lemmatization_index:
-                            if flag_is_upper:
-                                i_token += lemmatization_index[i_token].upper()
-                            elif flag_is_lower:
-                                i_token += lemmatization_index[i_token].lower()
-                            elif flag_is_capit:
-                                i_token += lemmatization_index[i_token].capitalize()
-                            else:
-                                i_token += lemmatization_index[i_token]
+#                 token_res = ''
+#                 for i_token in aux_token:
+#                     if len(i_token) > 0:
+#                         flag_is_upper = i_token.isupper()
+#                         flag_is_lower = i_token.islower()
+#                         flag_is_capit = not flag_is_upper and not flag_is_lower and i_token[0].isupper(
+#                         )
+#                         i_token = i_token.lower()
+#                         if i_token in lemmatization_index:
+#                             if flag_is_upper:
+#                                 i_token += lemmatization_index[i_token].upper()
+#                             elif flag_is_lower:
+#                                 i_token += lemmatization_index[i_token].lower()
+#                             elif flag_is_capit:
+#                                 i_token += lemmatization_index[i_token].capitalize()
+#                             else:
+#                                 i_token += lemmatization_index[i_token]
 
-                token = token_res
-    return ' '.join(txt)
+#                 token = token_res
+#     return ' '.join(txt)
 
 
 def noise_removal(txt):
@@ -160,7 +160,6 @@ if __name__ == "__main__":
         for name in files:
             df = pd.concat([df, pd.read_excel(os.path.join(path, name))])
 
-    
     print("Mostres abans del preprocessament: {}".format(len(df)))
 
     df.dropna(subset=['Classificació'], inplace=True)
@@ -217,7 +216,10 @@ if __name__ == "__main__":
                                  row['Classificació'].strip(), row['Classificació'].strip(), ''])
 
     # Generació del dataset amb stopwords
-    df = pd.read_excel(RAW_DATA)
+    df = pd.DataFrame()
+    for path, subdirs, files in os.walk('data/TextClassification/corpus'):
+        for name in files:
+            df = pd.concat([df, pd.read_excel(os.path.join(path, name))])
 
     df.dropna(subset=['Classificació'], inplace=True)
 
@@ -248,5 +250,3 @@ if __name__ == "__main__":
             else:
                 writer.writerow([row['Description'],
                                  row['Classificació'].strip(), row['Classificació'].strip(), ''])
-
-
