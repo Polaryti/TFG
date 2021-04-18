@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import pandas as pd
-import sys
 import re
 from envar import CATALAN_STOPWORDS
 import csv
@@ -74,7 +73,8 @@ if __name__ == "__main__":
     df = pd.DataFrame()
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
-            df = pd.concat([df, pd.read_excel(os.path.join(path, name))])
+            df = pd.concat([df, pd.read_excel(os.path.join(path, name)).drop(df.columns.difference(
+        ['Description', 'Classificació']), 1)], copy=False)
 
     print("Mostres abans del preprocessament: {}".format(len(df)))
 
@@ -94,8 +94,6 @@ if __name__ == "__main__":
     df.dropna(subset=['Description'], inplace=True)
     df.drop_duplicates(['Description'], inplace=True)
 
-    df.drop(df.columns.difference(
-        ['Description', 'Classificació']), 1, inplace=True)
 
     unique_cat = []
     aux = set()
@@ -113,8 +111,7 @@ if __name__ == "__main__":
         for clase in aux:
             write_file.write("{}\n".format(clase))
 
-
-    with open('res/data_corpus_full_stopwords.csv', 'w', encoding="utf-8") as w_file:
+    with open('res/data_corpus_full_stopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
                          'Classificació_01', 'Classificació_02'])
@@ -150,7 +147,7 @@ if __name__ == "__main__":
     df.drop(df.columns.difference(
         ['Description', 'Classificació']), 1, inplace=True)
 
-    with open('res/data_corpus_full.csv', 'w', encoding="utf-8") as w_file:
+    with open('res/data_corpus_full.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
                          'Classificació_01', 'Classificació_02'])
