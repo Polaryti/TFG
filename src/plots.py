@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     # n-grames més freqüents
     n_grama = 3
-    top_n_bigrams = get_top_ngram(df['Description'], n_grama)[:10]
+    top_n_bigrams = get_top_ngram(df['Description'], n_grama)
     x, y = map(list, zip(*top_n_bigrams))
     data = sns.barplot(x=y, y=x)
     plt.plot(data=data)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     # n-grames més freqüents
     n_grama = 3
-    top_n_bigrams = get_top_ngram(df['Description'], n_grama)[:10]
+    top_n_bigrams = get_top_ngram(df['Description'], n_grama)
     x, y = map(list, zip(*top_n_bigrams))
     data = sns.barplot(x=y, y=x)
     plt.plot(data=data)
