@@ -21,7 +21,7 @@
     - Es una versió de fa tan sols un any pero pareix que ja no es compatible amb la versió actual de Spacy.
     - *(fent més proves)*
 
-- [ ] *Exploration data analysis* de les clases simples:
+- [x] *Exploration data analysis* de les clases simples:
     - [x] Representació visual de algunes caracteristiques
     - [x] Class count
 
@@ -33,5 +33,11 @@
     - Sense stopwords millora un 1%.
     - Agafant a soles una clase la millora es d'un 3-4%.
 
-- [ ] Confusion matrix
+- [x] Confusion matrix
 - [ ] Most frequent words en cada clase
+
+- [ ] Hacer experimiento con las 4 clases principales
+- [ ] Llevar les mostres amb més d'una classe
+- [ ] Representación vectorial de l'entrada, embeddings (FastText)
+- [ ] Revisar la SVM
+- [ ] Demo de aplicació per a la defensa, periodista

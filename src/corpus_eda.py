@@ -35,12 +35,12 @@ def compute_info(classification, df):
 
 
 if __name__ == "__main__":
-    num_cores = multiprocessing.cpu_count()
+    num_cores = multiprocessing.cpu_count() - 1
     df_a = pd.read_csv(r'res/data_corpus_full.csv', encoding="utf-8")
-    Parallel(n_jobs=num_cores)(delayed(compute_info)(i, df_a.copy()) for i in df_a['Classificació'].unique())
+    Parallel(n_jobs=num_cores, prefer="threads")(delayed(compute_info)(i, df_a.copy()) for i in df_a['Classificació_01'].unique())
 
     df_b = pd.read_csv(r'res/data_corpus_full_stopwords.csv', encoding="utf-8")
-    Parallel(n_jobs=num_cores)(delayed(compute_info)(i, df_b.copy()) for i in df_b['Classificació'].unique())
+    Parallel(n_jobs=num_cores, prefer="threads")(delayed(compute_info)(i, df_b.copy()) for i in df_b['Classificació_01'].unique())
 
     with open(r'res/stats_with_stopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         w_file.write(

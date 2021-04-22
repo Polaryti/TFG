@@ -73,8 +73,7 @@ if __name__ == "__main__":
     df = pd.DataFrame()
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
-            df = pd.concat([df, pd.read_excel(os.path.join(path, name)).drop(df.columns.difference(
-        ['Description', 'Classificació']), 1)], copy=False)
+            df = pd.concat([df, pd.read_excel(os.path.join(path, name)).drop(df.columns.difference(['Description', 'Classificació']), 1)], copy=False)
 
     print("Mostres abans del preprocessament: {}".format(len(df)))
 
@@ -93,7 +92,6 @@ if __name__ == "__main__":
     df['Description'].replace('', np.NaN, inplace=True)
     df.dropna(subset=['Description'], inplace=True)
     df.drop_duplicates(['Description'], inplace=True)
-
 
     unique_cat = []
     aux = set()
