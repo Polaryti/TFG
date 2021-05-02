@@ -81,8 +81,8 @@ if __name__ == "__main__":
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
             df = pd.read_excel(os.path.join(path, name))
-            df.drop(df.columns.difference(['Description', 'Classificació']), index=1, inplace=True)
-            sample_count += len(df)
+            df = df[['Description', 'Classificació']]
+            sample_count += len(df.index)
 
             df.dropna(subset=['Classificació'], inplace=True)
 
