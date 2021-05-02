@@ -12,7 +12,10 @@ from sklearn.model_selection import train_test_split
 def train_models(path: str):
     df = pd.read_csv(path, encoding="utf-8")
 
-    X_train, X_test, y_train, y_test = train_test_split(df['Description'], df['Classificació_01'], test_size=0.25, random_state=42)
+    df = pd.concat([df[df['Classificació'] == 'ESPORTS'], df[df['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df[df['Classificació'] == 'POLÍTICA'], df[df['Classificació'] == 'SOCIETAT']])
+    # df = pd.concat([df[df['Classificació'] == 'ESPORTS'], df[df['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df[df['Classificació'] == 'POLÍTICA'], df[df['Classificació'] == 'SOCIETAT'], df[df['Classificació'] == 'ACCIDENTS I CATÀSTROFES'], df[df['Classificació'] == 'FESTES I TRADICIONS']])
+
+    X_train, X_test, y_train, y_test = train_test_split(df['Description'], df['Classificació'], test_size=0.3)
 
     # BAG OF WORDS
     count_vect = CountVectorizer()
@@ -31,10 +34,10 @@ def train_models(path: str):
     clf.fit(X_train_counts, y_train)
     y_pred = clf.predict(X_test_tfidf)
 
-    print(f"RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    print(f"NB RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
 
     # cm = confusion_matrix(y_test, y_pred)
-    plot_confusion_matrix(clf, X_test_tfidf, y_test, include_values=False)
+    plot_confusion_matrix(clf, X_test_tfidf, y_test, include_values=True)
     plt.show()
 
     # SVM
@@ -42,11 +45,14 @@ def train_models(path: str):
     sgd.fit(X_train_counts, y_train)
     y_pred = sgd.predict(X_test_tfidf)
 
-    print(f"RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    print(f"SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    plot_confusion_matrix(sgd, X_test_tfidf, y_test, include_values=True)
+    plt.show()
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(r'res\data_corpus.csv', encoding="utf-8")
+    df = pd.read_csv(r'res\corpus_noStopwords.csv', encoding="utf-8")
+    print(len(df['Classificació'].unique()))
 
     # CLASS COUNT
     simple_class_count = {}
