@@ -34,10 +34,11 @@
     - Agafant a soles una clase la millora es d'un 3-4%.
 
 - [x] Confusion matrix
-- [ ] Most frequent words en cada clase
+- [X] Estadistiques de cada classe
 
-- [ ] Hacer experimiento con las 4 clases principales
-- [ ] Llevar les mostres amb més d'una classe
+- [X] Hacer experimiento con las 4 clases principales
+    - [ ] Repetir amb FastText
+- [X] Llevar les mostres amb més d'una classe
 - [ ] Representación vectorial de l'entrada, embeddings (FastText)
-- [ ] Revisar la SVM
+- [X] Revisar la SVM
 - [ ] Demo de aplicació per a la defensa, periodista

@@ -99,14 +99,15 @@ if __name__ == "__main__":
 
             df_res = pd.concat([df_res, df], copy=False)
 
-    unique_cat = []
+    # unique_cat = []
     aux = set()
 
-    for s in df['Classificació']:
-        unique_cat += (s.split('|'))
+    # for s in df['Classificació']:
+    #     unique_cat += (s.split('|'))
 
-    for s in unique_cat:
-        aux.add(s.strip())
+    # for s in unique_cat:
+    #     aux.add(s.strip())
+    aux = df_res['Classificació'].unique()
 
     print("Mostres abans del preprocessament: {}".format(sample_count))
     print("Mostres després del preprocessament: {}".format(len(df_res)))
