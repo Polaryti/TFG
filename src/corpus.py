@@ -57,6 +57,7 @@ def stopwords_removal(txt):
     if txt is np.NaN:
         return txt
     else:
+        txt = txt.lower()
         txt = txt.split()
         for stopword in CATALAN_STOPWORDS:
             txt = list(filter((stopword).__ne__, txt))

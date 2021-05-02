@@ -27,18 +27,19 @@ def compute_info_noStopwords(classification, df):
     stats_without_stopwords[classification]['mean_len_words'] = max(
         df['Description'].str.split().apply(lambda x: [len(i) for i in x]).map(lambda x: np.mean(x)))
     stats_without_stopwords[classification]['1_grama'] = get_top_ngram(
-        df['Description'], 1)[:10]
+        df['Description'], 1)[:6]
     stats_without_stopwords[classification]['2_grama'] = get_top_ngram(
-        df['Description'], 2)[:10]
+        df['Description'], 2)[:6]
     stats_without_stopwords[classification]['3_grama'] = get_top_ngram(
-        df['Description'], 3)[:10]
+        df['Description'], 3)[:6]
 
 
 if __name__ == "__main__":
     # num_cores = multiprocessing.cpu_count() - 1
     df = pd.read_csv(r'res\corpus_noStopwords.csv', encoding="utf-8")
+
     for cla in df['Classificació'].unique():
-        compute_info_noStopwords(cla, df)
+        compute_info_noStopwords(cla, df[df['Classificació'] == cla])
 
     # Parallel(n_jobs=num_cores, prefer="threads")(delayed(compute_info)(i, df_a.copy()) for i in df_a['Classificació_01'].unique())
 
@@ -53,9 +54,8 @@ if __name__ == "__main__":
 
     with open(r'res/stats_noStopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         w_file.write(
-            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama\n')
+            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama')  # ,1_grama,2_grama,3_grama\n')
         for key, value in stats_without_stopwords.items():
-            w_file.write(f'{key}')
-            for v in value.values():
-                w_file.write(f',\"{value}\"')
-            w_file.write('\n')
+            w_file.write(f'\n"{key}"')
+            for v in stats_without_stopwords[key].values():
+                w_file.write(f',"{str(v)}"')
