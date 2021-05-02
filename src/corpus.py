@@ -115,22 +115,21 @@ if __name__ == "__main__":
         for clase in aux:
             write_file.write("{}\n".format(clase))
 
-    max = -1
-    with open('res/data_corpus_full_no_stopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
+    # max = -1
+    with open('res/corpus_noStopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
-        writer.writerow(['Description', 'Classificació',
-                         'Classificació_01', 'Classificació_02', 'Classificació_03'])
+        writer.writerow(['Description', 'Classificació'])
         for index, row in df_res.iterrows():
             aux = row['Classificació'].split('|')
             if len(aux) > 1:
-                if len(aux) > max:
-                    max = len(aux)
-                writer.writerow([row['Description'], row['Classificació'].strip(
-                ), aux[0].strip(), aux[1].strip()])
+                pass
+                # if len(aux) > max:
+                #     max = len(aux)
+                # writer.writerow([row['Description'], row['Classificació'].strip(
+                # ), aux[0].strip(), aux[1].strip()])
             else:
-                writer.writerow([row['Description'],
-                                 row['Classificació'].strip(), row['Classificació'].strip(), ''])
-    print(f'MAXIM: {max}')
+                writer.writerow([row['Description'], row['Classificació'].strip()])
+    # print(f'MAXIM: {max}')
 
     # Generació del dataset amb stopwords
     df = pd.DataFrame()
@@ -155,15 +154,14 @@ if __name__ == "__main__":
     df.drop(df.columns.difference(
         ['Description', 'Classificació']), 1, inplace=True)
 
-    with open('res/data_corpus_full.csv', 'w', encoding="utf-8", newline='') as w_file:
+    with open('res/corpus_ambStopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
-        writer.writerow(['Description', 'Classificació',
-                         'Classificació_01', 'Classificació_02', 'Classificació_03'])
+        writer.writerow(['Description', 'Classificació'])
         for index, row in df.iterrows():
             aux = row['Classificació'].split('|')
             if len(aux) > 1:
-                writer.writerow([row['Description'], row['Classificació'].strip(
-                ), aux[0].strip(), aux[1].strip()])
+                pass
+                # writer.writerow([row['Description'], row['Classificació'].strip(
+                # ), aux[0].strip(), aux[1].strip()])
             else:
-                writer.writerow([row['Description'],
-                                 row['Classificació'].strip(), row['Classificació'].strip(), ''])
+                writer.writerow([row['Description'], row['Classificació'].strip()])
