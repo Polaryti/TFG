@@ -47,6 +47,8 @@ def noise_removal(txt):
         txt_aux = txt.lower()
         if 'suport directe' in txt_aux or 'suport directe amb' in txt_aux or 'fals directe' in txt_aux:
             txt = np.NaN
+        if txt_aux == "dnc":
+            txt = np.NaN
 
     return txt
 
@@ -68,30 +70,33 @@ def digits_removal(txt):
         return txt.translate(remove_digits)
 
 
+def apply_functions(txt):
+    return digits_removal(stopwords_removal(noise_removal(txt)))
+
+
 if __name__ == "__main__":
     # Generació del dataset sense stopwords i estadistiques de les clases
-    df = pd.DataFrame()
+    sample_count = 0
+    df_res = pd.DataFrame()
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
-            df = pd.concat([df, pd.read_excel(os.path.join(path, name)).drop(df.columns.difference(['Description', 'Classificació']), 1)], copy=False)
+            df = pd.read_excel(os.path.join(path, name))
+            df.drop(df.columns.difference(['Description', 'Classificació']), index=1, inplace=True)
+            sample_count += len(df)
 
-    print("Mostres abans del preprocessament: {}".format(len(df)))
+            df.dropna(subset=['Classificació'], inplace=True)
 
-    df.dropna(subset=['Classificació'], inplace=True)
+            df['Description'] = df['Description'].apply(apply_functions)
+            df['Description'].replace('', np.NaN, inplace=True)
+            df.dropna(subset=['Description'], inplace=True)
+            df.drop_duplicates(['Description'], inplace=True)
 
-    df['Description'] = df['Description'].apply(noise_removal)
-    df['Description'] = df['Description'].apply(stopwords_removal)
-    df['Description'] = df['Description'].apply(digits_removal)
-    df['Description'].replace('', np.NaN, inplace=True)
-    df.dropna(subset=['Description'], inplace=True)
-    df.drop_duplicates(['Description'], inplace=True)
+            df['Description'] = df['Description'].apply(noise_removal)
+            df['Description'].replace('', np.NaN, inplace=True)
+            df.dropna(subset=['Description'], inplace=True)
+            df.drop_duplicates(['Description'], inplace=True)
 
-    df['Description'] = df['Description'].apply(noise_removal)
-    df['Description'] = df['Description'].apply(stopwords_removal)
-    df['Description'] = df['Description'].apply(digits_removal)
-    df['Description'].replace('', np.NaN, inplace=True)
-    df.dropna(subset=['Description'], inplace=True)
-    df.drop_duplicates(['Description'], inplace=True)
+            df_res = pd.concat([df_res, df], copy=False)
 
     unique_cat = []
     aux = set()
@@ -102,25 +107,30 @@ if __name__ == "__main__":
     for s in unique_cat:
         aux.add(s.strip())
 
-    print("Mostres després del preprocessament: {}".format(len(df)))
+    print("Mostres abans del preprocessament: {}".format(sample_count))
+    print("Mostres després del preprocessament: {}".format(len(df_res)))
     print("Nombre total de clases úniques: {}".format(len(aux)))
 
     with open('res/clases_corpus.csv', 'w', encoding="utf-8") as write_file:
         for clase in aux:
             write_file.write("{}\n".format(clase))
 
-    with open('res/data_corpus_full_stopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
+    max = -1
+    with open('res/data_corpus_full_no_stopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
-                         'Classificació_01', 'Classificació_02'])
-        for index, row in df.iterrows():
+                         'Classificació_01', 'Classificació_02', 'Classificació_03'])
+        for index, row in df_res.iterrows():
             aux = row['Classificació'].split('|')
             if len(aux) > 1:
+                if len(aux) > max:
+                    max = len(aux)
                 writer.writerow([row['Description'], row['Classificació'].strip(
                 ), aux[0].strip(), aux[1].strip()])
             else:
                 writer.writerow([row['Description'],
                                  row['Classificació'].strip(), row['Classificació'].strip(), ''])
+    print(f'MAXIM: {max}')
 
     # Generació del dataset amb stopwords
     df = pd.DataFrame()
@@ -148,7 +158,7 @@ if __name__ == "__main__":
     with open('res/data_corpus_full.csv', 'w', encoding="utf-8", newline='') as w_file:
         writer = csv.writer(w_file)
         writer.writerow(['Description', 'Classificació',
-                         'Classificació_01', 'Classificació_02'])
+                         'Classificació_01', 'Classificació_02', 'Classificació_03'])
         for index, row in df.iterrows():
             aux = row['Classificació'].split('|')
             if len(aux) > 1:
