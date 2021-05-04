@@ -36,7 +36,7 @@ def compute_info_noStopwords(classification, df):
 
 if __name__ == "__main__":
     # num_cores = multiprocessing.cpu_count() - 1
-    df = pd.read_csv(r'res\corpus_noStopwords.csv', encoding="utf-8")
+    df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 
     for cla in df['Classificació'].unique():
         compute_info_noStopwords(cla, df[df['Classificació'] == cla])

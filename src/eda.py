@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 def train_models(path: str):
     df = pd.read_csv(path, encoding="utf-8")
 
-    X_train, X_test, y_train, y_test = train_test_split(df['Description'], df['Classificació_01'], test_size=0.25, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(df['Description'], df['Classificació'], test_size=0.25, random_state=42)
 
     # BAG OF WORDS
     count_vect = CountVectorizer()
@@ -46,7 +46,7 @@ def train_models(path: str):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(r'res\data_corpus.csv', encoding="utf-8")
+    df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 
     # CLASS COUNT
     simple_class_count = {}
@@ -75,8 +75,8 @@ if __name__ == "__main__":
         for key, value in combined_class_count.items():
             w_file.write(f'{key}% {value}\n')
 
-    train_models(r'res\data_corpus_full.csv')
-    train_models(r'res\data_corpus_full_stopwords.csv')
+    train_models(r'res/corpus_ambStopwords.csv')
+    train_models(r'res/corpus_noStopwords.csv')
 
     # # (AMB STOPWORDS)
     # df = pd.read_csv(r'res\data_corpus_full.csv', encoding="utf-8")
