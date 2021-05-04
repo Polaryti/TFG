@@ -48,20 +48,18 @@ def train_models(path: str):
 if __name__ == "__main__":
     df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 
+    print(len(df))
     # CLASS COUNT
     simple_class_count = {}
-    combined_class_count = {}
+    # combined_class_count = {}
     for index, row in df.iterrows():
         raw = row['Classificació'].strip()
-        if raw not in combined_class_count:
-            combined_class_count[raw] = 0
-        combined_class_count[raw] += 1
-
-        for single_class in raw.split('|'):
-            single_class = single_class.strip()
-            if single_class not in simple_class_count:
-                simple_class_count[single_class] = 0
-            simple_class_count[single_class] += 1
+        # if raw not in combined_class_count:
+        #     combined_class_count[raw] = 0
+        # combined_class_count[raw] += 1
+        if raw not in simple_class_count:
+            simple_class_count[raw] = 0
+        simple_class_count[raw] += 1
 
     with open(r'res/class_corpus_indiviudal.csv', 'w', encoding="utf-8", newline='') as w_file:
         simple_class_count = {k: v for k, v in sorted(
@@ -69,14 +67,14 @@ if __name__ == "__main__":
         for key, value in simple_class_count.items():
             w_file.write(f'{key}% {value}\n')
 
-    with open(r'res/class_corpus_dual.csv', 'w', encoding="utf-8", newline='') as w_file:
-        combined_class_count = {k: v for k, v in sorted(
-            combined_class_count.items(), key=lambda item: item[1], reverse=True)}
-        for key, value in combined_class_count.items():
-            w_file.write(f'{key}% {value}\n')
+    # with open(r'res/class_corpus_dual.csv', 'w', encoding="utf-8", newline='') as w_file:
+    #     combined_class_count = {k: v for k, v in sorted(
+    #         combined_class_count.items(), key=lambda item: item[1], reverse=True)}
+    #     for key, value in combined_class_count.items():
+    #         w_file.write(f'{key}% {value}\n')
 
-    train_models(r'res/corpus_ambStopwords.csv')
-    train_models(r'res/corpus_noStopwords.csv')
+    # train_models(r'res/corpus_ambStopwords.csv')
+    # train_models(r'res/corpus_noStopwords.csv')
 
     # # (AMB STOPWORDS)
     # df = pd.read_csv(r'res\data_corpus_full.csv', encoding="utf-8")

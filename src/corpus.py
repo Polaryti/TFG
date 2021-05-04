@@ -76,14 +76,14 @@ def apply_functions(txt):
 
 
 if __name__ == "__main__":
-    # Generació del dataset sense stopwords i estadistiques de les clases
+    # Generació del dataset sense stopwords
     sample_count = 0
     df_res = pd.DataFrame()
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
             df = pd.read_excel(os.path.join(path, name))
+            sample_count += len(df)
             df = df[['Description', 'Classificació']]
-            sample_count += len(df.index)
 
             df.dropna(subset=['Classificació'], inplace=True)
 
