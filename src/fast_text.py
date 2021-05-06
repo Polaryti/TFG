@@ -1,47 +1,75 @@
 import fasttext
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import recall_score
+import random
 
-generate_txt_file = False
+generate_txt_file = True
 
 df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 le = LabelEncoder()
 le.fit(df['Classificació'].unique())
-print(f'Classess úniques: {len(le.classes_)}')
+# print(f'Classess úniques: {len(le.classes_)}')
 
 if generate_txt_file:
+    test_split = 0.2
     df['Classificació'] = le.transform(df['Classificació'])
 
-    with open(r'data/FastText/corpus_noStopwords_ft.txt', 'w', encoding="utf-8", newline='') as w_file:
-        for _, row in df.iterrows():
-            w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+    samples_per_class = {}
 
-# model = fasttext.train_unsupervised(r'data/FastText/corpus_noStopwords_ft.txt', model='skipgram')
+    for _, row in df.iterrows():
+        if row["Classificació"] not in samples_per_class:
+            samples_per_class[row["Classificació"]] = []
+        samples_per_class[row["Classificació"]].append(row["Description"])
 
-model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft.txt')
+    with open(r'data/FastText/corpus_noStopwords_ft_train.txt', 'w', encoding="utf-8", newline='') as w_file:
+        for key, value in samples_per_class.items():
+            random.shuffle(value)
+            for sample in value[:int(len(value) * (1 - test_split))]:
+                w_file.write(f'__label__{key} {sample}\n')
+
+    y_true = []
+    with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'w', encoding="utf-8", newline='') as w_file:
+        for key, value in samples_per_class.items():
+            random.shuffle(value)
+            for sample in value[int(len(value) * (1 - test_split)):]:
+                y_true.append(key)
+                w_file.write(f'{sample}\n')
+
+
+model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt')
 
 print(len(model.words))
 print(len(model.labels))
 
-def print_results(N, p, r):
-    print("N\t" + str(N))
-    print("P@{}\t{:.3f}".format(1, p))
-    print("R@{}\t{:.3f}".format(1, r))
+y_pred = []
+with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r') as test_file:
+    for line in test_file.readlines():
+        y_pred.append(int(model.predict(line.strip())[0][0].replace('__label__', '')))
 
-print_results(*model.test(r'data/FastText/corpus_noStopwords_ft_test.txt'))
+print(recall_score(y_true, y_pred, average="macro"))
+print(recall_score(y_true, y_pred, average=None))
 
-print(model.predict("justicia", k=3))
-print(model.predict("paella", k=3))
-print(model.predict("causa penal", k=3))
-print(model.predict("ximo puig", k=3))
-print(model.predict("el dia del llibre a la ciutat de valència", k=3))
+# print(model.predict(r'data/FastText/corpus_noStopwords_ft_test.txt'))
+
+# def print_results(N, p, r):
+#     print("N\t" + str(N))
+#     print("P@{}\t{:.3f}".format(1, p))
+#     print("R@{}\t{:.3f}".format(1, r))
+
+# print_results(*model.test(r'data/FastText/corpus_noStopwords_ft_test.txt', k=1))
+
+# print(model.predict("justicia", k=3))
+# print(model.predict("paella", k=3))
+# print(model.predict("causa penal", k=3))
+# print(model.predict("ximo puig", k=3))
+# print(model.predict("el dia del llibre a la ciutat de valència", k=3))
 
 i = 0
-for l in le.classes_:
-    print(f'{i}     {l}')
+for lasdas in le.classes_:
+    print(f'{lasdas}')
     i += 1
-# print(le.inverse_transform([model.predict("paco pons")[0][0].split('__')[1]]))
 
-# ft = fasttext.load_model(r'data/FastText/cc.ca.300.bin')
-
-# print(ft.get_nearest_neighbors('paco'))
+# print(model.get_nearest_neighbors('paco'))
+print(len(model.get_word_vector("valència")))
+print(len(model.get_word_vector("alacant")))
