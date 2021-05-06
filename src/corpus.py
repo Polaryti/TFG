@@ -79,8 +79,10 @@ if __name__ == "__main__":
     # Generació del dataset sense stopwords
     sample_count = 0
     df_res = pd.DataFrame()
+    cont = 0
     for path, subdirs, files in os.walk('data/TextClassification/corpus'):
         for name in files:
+            cont += 1
             df = pd.read_excel(os.path.join(path, name))
             sample_count += len(df)
             df = df[['Description', 'Classificació']]
@@ -98,6 +100,7 @@ if __name__ == "__main__":
             df.drop_duplicates(['Description'], inplace=True)
 
             df_res = pd.concat([df_res, df], copy=False)
+            print(f'Processat fitxer \"{name}\"')
 
     # unique_cat = []
     aux = set()
@@ -110,8 +113,8 @@ if __name__ == "__main__":
     aux = df_res['Classificació'].unique()
 
     print("Mostres abans del preprocessament: {}".format(sample_count))
-    print("Mostres després del preprocessament: {}".format(len(df_res)))
-    print("Nombre total de clases úniques: {}".format(len(aux)))
+    print("Mostres després del preprocessament (sense eliminar les de més d'una classe): {}".format(len(df_res)))
+    print("Nombre total de clases úniques (sense eliminar les de més d'una classe): {}".format(len(aux)))
 
     with open('res/clases_corpus.csv', 'w', encoding="utf-8") as write_file:
         for clase in aux:
