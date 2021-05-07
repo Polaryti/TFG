@@ -3,26 +3,28 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier
 # from sklearn.pipeline import Pipeline
-# from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import recall_score, plot_confusion_matrix
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
 
 
-def train_models(path: str, is_stopwords : bool):
-    df = pd.read_csv(path, encoding="utf-8")
+def train_models(path_train: str, path_test: str, is_stopwords: bool):
+    df_train = pd.read_csv(path_train, encoding='utf-8')
+    df_test = pd.read_csv(path_test, encoding='utf-8')
 
-    # df = pd.concat([df[df['Classificació'] == 'ESPORTS'], df[df['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df[df['Classificació'] == 'POLÍTICA'], df[df['Classificació'] == 'SOCIETAT']])
-    df = pd.concat([df[df['Classificació'] == 'ESPORTS'], df[df['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df[df['Classificació'] == 'POLÍTICA'], df[df['Classificació'] == 'SOCIETAT'], df[df['Classificació'] == 'ACCIDENTS I CATÀSTROFES'], df[df['Classificació'] == 'FESTES I TRADICIONS']])
-
-    X_train, X_test, y_train, y_test = train_test_split(df['Description'], df['Classificació'], test_size=0.3)
+    # df_train = pd.concat([df_train[df_train['Classificació'] == 'ESPORTS'], df_train[df_train['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_train[df_train['Classificació'] == 'POLÍTICA'], df_train[df_train['Classificació'] == 'SOCIETAT'], df_train[df_train['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_train[df_train['Classificació'] == 'FESTES I TRADICIONS']])
+    # df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
+    # df_test = pd.concat([df_test[df_test['Classificació'] == 'ESPORTS'], df_test[df_test['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_test[df_test['Classificació'] == 'POLÍTICA'], df_test[df_test['Classificació'] == 'SOCIETAT'], df_test[df_test['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_test[df_test['Classificació'] == 'FESTES I TRADICIONS']])
+    # df_test = df_test.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # BAG OF WORDS
     count_vect = CountVectorizer()
-    count_vect.fit(df['Description'])
-    X_counts = count_vect.transform(X_train)
-    X_train_counts = count_vect.transform(X_train)
-    X_test_counts = count_vect.transform(X_test)
+    count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
+    X_counts = count_vect.transform(df_train['Description'])
+    X_train_counts = count_vect.transform(df_train['Description'])
+    X_test_counts = count_vect.transform(df_test['Description'])
     tfidf_transformer = TfidfTransformer()
     tfidf_transformer.fit(X_counts)
     X_train_tfidf = tfidf_transformer.transform(X_train_counts)
@@ -34,25 +36,34 @@ def train_models(path: str, is_stopwords : bool):
 
     # MULTINOMIAL
     clf = MultinomialNB()
-    clf.fit(X_train_counts, y_train)
+    clf.fit(X_train_tfidf, df_train['Classificació'])
     y_pred = clf.predict(X_test_tfidf)
 
-    print(f"NB RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
     # cm = confusion_matrix(y_test, y_pred)
-    plot_confusion_matrix(clf, X_test_tfidf, y_test, include_values=True)
+    plot_confusion_matrix(clf, X_test_tfidf, df_test['Classificació'], include_values=True)
     plt.show()
 
     # SVM
     sgd = SGDClassifier()
-    sgd.fit(X_train_counts, y_train)
+    sgd.fit(X_train_tfidf, df_train['Classificació'])
     y_pred = sgd.predict(X_test_tfidf)
 
-    print(f"SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
-    plot_confusion_matrix(sgd, X_test_tfidf, y_test, include_values=True)
+    # tuned_parameters = [{'kernel': ['linear', 'rbf'], 'gamma': [1e-3, 1e-4],
+    #                      'C': [1, 10, 100, 1000]},
+    #                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+    # clf = GridSearchCV(
+    #     SVC(), tuned_parameters, scoring='recall_macro'
+    # )
+    # clf.fit(X_train_tfidf, df_train['Classificació'])
+    # y_pred = clf.best_estimator_.predict(X_test_tfidf)
+
+    print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
+    plot_confusion_matrix(sgd, X_test_tfidf, df_test['Classificació'], include_values=True)
     plt.show()
 
 
 if __name__ == "__main__":
-    train_models(r'res/corpus_ambStopwords.csv', True)
-    train_models(r'res/corpus_noStopwords.csv', False)
+    train_models(r'res/corpus_noStopwords_train.csv', r'res/corpus_noStopwords_test.csv', False)
+    train_models(r'res/corpus_ambStopwords_train.csv', r'res/corpus_ambStopwords_test.csv', True)
