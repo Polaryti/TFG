@@ -7,19 +7,21 @@
     - [x] Eliminats signes de puntuació i demés simbols
     - [x] Amb el corpus complet apareixen més problemes de neteja
 
-- [ ] Substitució de apostrofs per paraula completa
+- [X] Substitució de apostrofs per paraula completa
+    - Es lleva com si fora una stopword
 - [x] Stopwords (http://latel.upf.edu/morgana/altres/pub/ca_stop.htm)
 - [x] Stemmer (http://snowball.tartarus.org/algorithms/catalan/stemmer.html)
     - No disponible a Python
-- [ ] Lemmatization (https://github.com/michmech/lemmatization-lists)
+- [X] Lemmatization (https://github.com/michmech/lemmatization-lists)
     - *En proces de construcció d'un propi*
+    - Es decarta, per ara
 
 - [x] Models i la seua entrada Hugging Face:
     - Hi ha un total de 32 models dels quals 26 son per a traducció, 2 de *automatic speech recognition* i la resta de *fill-mask*. Cap de *text classification*.
 
-- [ ] https://github.com/ccoreilly/spacy-catala
+- [X] https://github.com/ccoreilly/spacy-catala
     - Es una versió de fa tan sols un any pero pareix que ja no es compatible amb la versió actual de Spacy.
-    - *(fent més proves)*
+    - Es descarta, per ara
 
 - [x] *Exploration data analysis* de les clases simples:
     - [x] Representació visual de algunes caracteristiques
@@ -37,8 +39,26 @@
 - [X] Estadistiques de cada classe
 
 - [X] Hacer experimiento con las 4 clases principales
-    - [ ] Repetir amb FastText
+    - [X] Repetir amb FastText
 - [X] Llevar les mostres amb més d'una classe
-- [ ] Representación vectorial de l'entrada, embeddings (FastText)
+- [X] Representación vectorial de l'entrada, embeddings (FastText)
 - [X] Revisar la SVM
-- [ ] Demo de aplicació per a la defensa, periodista
+
+**Reunió 20/05/21**
+- [ ] Entrenar amb bi-grames *("hola que tal" -> " hola", "hola que", "que tal", "tal ")*
+- [ ] Llevar els trigrames repetits
+- [x] Probar i modificar la SVM
+    - El problema era que agafava la representació CountVector en compte de la Tf-IDF
+- [ ] Comprobar si la classe correcta está en les 2-5 primeres classes
+- [ ] FastText, veure amb model descarregat si es pot actualitzar i generar els embeddings amb aquest i el corpus d'APunt
+- [x] Repetir els experiments amb els mateixos corpus de test/train
+    - Resultats en: https://docs.google.com/spreadsheets/d/19pMylt7uQ3ZM6gJ7z0eLV5R55Ust_B0nmb2yHvm_PLQ/edit?usp=sharing
+- [ ] Utilitzar els embeddings de FastText per al NB i la SVM
+
+**Reunió 03/06/21**
+
+
+
+**Per al futur...**
+- [ ] Demo de aplicació per a la defensa i periodistes
+- [ ] Gran experiment de Lluis
