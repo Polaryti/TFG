@@ -8,7 +8,8 @@ from sklearn.metrics import recall_score, plot_confusion_matrix
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-import fasttext
+# import fasttext
+from sklearn.ensemble import RandomForestClassifier
 
 
 def train_models(path_train: str, path_test: str, is_stopwords: bool):
@@ -23,26 +24,35 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     # BAG OF WORDS
     count_vect = CountVectorizer()
     count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
-    X_counts = count_vect.transform(df_train['Description'])
-    X_train_counts = count_vect.transform(df_train['Description'])
-    X_test_counts = count_vect.transform(df_test['Description'])
+    x_counts = count_vect.transform(df_train['Description'])
+    x_train_counts = count_vect.transform(df_train['Description'])
+    x_test_counts = count_vect.transform(df_test['Description'])
     tfidf_transformer = TfidfTransformer()
-    tfidf_transformer.fit(X_counts)
-    X_train_tfidf = tfidf_transformer.transform(X_train_counts)
-    X_test_tfidf = tfidf_transformer.transform(X_test_counts)
+    tfidf_transformer.fit(x_counts)
+    x_train_tfidf = tfidf_transformer.transform(x_train_counts)
+    x_test_tfidf = tfidf_transformer.transform(x_test_counts)
     if is_stopwords:
-        print(f'Paraules uniques (AMB STOPWORDS): {X_train_tfidf.shape[1]}')
+        print(f'Paraules uniques (AMB STOPWORDS): {x_train_tfidf.shape[1]}')
     else:
-        print(f'Paraules uniques (SENSE STOPWORDS): {X_train_tfidf.shape[1]}')
+        print(f'Paraules uniques (SENSE STOPWORDS): {x_train_tfidf.shape[1]}')
+
+    # Random Forest
+    rf = RandomForestClassifier()
+    rf.fit(x_train_tfidf, df_train['Classificació'])
+    y_pred = rf.predict(x_test_tfidf)
+
+    print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
+    plot_confusion_matrix(rf, x_test_tfidf, df_test['Classificació'], include_values=False)
+    plt.show()
 
     # FastText
-    model = fasttext.train_supervised(r'data/FastText/corpus_ambStopwords_ft.txt', wordNgrams=3)
-    train = []
-    test = []
-    for _, row in df_train.iterrows():
-        train.append(model.get_word_vector(row['Description']))
-    for _, row in df_test.iterrows():
-        test.append(model.get_word_vector(row['Description']))
+    # model = fasttext.train_supervised(r'data/FastText/corpus_ambStopwords_ft.txt', wordNgrams=3)
+    # train = []
+    # test = []
+    # for _, row in df_train.iterrows():
+    #     train.append(model.get_word_vector(row['Description']))
+    # for _, row in df_test.iterrows():
+    #     test.append(model.get_word_vector(row['Description']))
 
     # MULTINOMIAL
     # clf = MultinomialNB()
@@ -52,13 +62,13 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     # print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
     # # cm = confusion_matrix(y_test, y_pred)
-    # plot_confusion_matrix(clf, X_test_tfidf, df_test['Classificació'], include_values=True)
+    # plot_confusion_matrix(clf, x_test_tfidf, df_test['Classificació'], include_values=True)
     # plt.show()
 
     # SVM
     sgd = SGDClassifier()
-    sgd.fit(train, df_train['Classificació'])
-    y_pred = sgd.predict(test)
+    sgd.fit(x_train_tfidf, df_train['Classificació'])
+    y_pred = sgd.predict(x_test_tfidf)
 
     # tuned_parameters = [{'kernel': ['linear', 'rbf'], 'gamma': [1e-3, 1e-4],
     #                      'C': [1, 10, 100, 1000]},
@@ -66,11 +76,11 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     # clf = GridSearchCV(
     #     SVC(), tuned_parameters, scoring='recall_macro'
     # )
-    # clf.fit(X_train_tfidf, df_train['Classificació'])
-    # y_pred = clf.best_estimator_.predict(X_test_tfidf)
+    # clf.fit(x_train_tfidf, df_train['Classificació'])
+    # y_pred = clf.best_estimator_.predict(x_test_tfidf)
 
     print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
-    plot_confusion_matrix(sgd, test, df_test['Classificació'], include_values=True)
+    plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=True)
     plt.show()
 
 
