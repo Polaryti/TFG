@@ -4,7 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import recall_score
 import random
 
-generate_txt_file = True
+generate_txt_file = False
 
 df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 le = LabelEncoder()
@@ -37,15 +37,18 @@ if generate_txt_file:
                 w_file.write(f'{sample}\n')
 
 
-model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt')
+model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', wordNgrams=3)
 
 print(len(model.words))
 print(len(model.labels))
 
 y_pred = []
-with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r') as test_file:
+y_true = []
+with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r', encoding='utf-8') as test_file:
     for line in test_file.readlines():
-        y_pred.append(int(model.predict(line.strip())[0][0].replace('__label__', '')))
+        line = line.replace('__label__', '')
+        y_true.append(int(line[:2].strip()))
+        y_pred.append(int(model.predict(line[2:].strip())[0][0].replace('__label__', '')))
 
 print(recall_score(y_true, y_pred, average="macro"))
 print(recall_score(y_true, y_pred, average=None))
@@ -65,11 +68,11 @@ print(recall_score(y_true, y_pred, average=None))
 # print(model.predict("ximo puig", k=3))
 # print(model.predict("el dia del llibre a la ciutat de valència", k=3))
 
-i = 0
-for lasdas in le.classes_:
-    print(f'{lasdas}')
-    i += 1
+# i = 0
+# for lasdas in le.classes_:
+#     print(f'{lasdas}')
+#     i += 1
 
-# print(model.get_nearest_neighbors('paco'))
-print(len(model.get_word_vector("valència")))
-print(len(model.get_word_vector("alacant")))
+# # print(model.get_nearest_neighbors('paco'))
+# print(len(model.get_word_vector("valència")))
+# print(len(model.get_word_vector("alacant")))
