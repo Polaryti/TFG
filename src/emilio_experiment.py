@@ -7,9 +7,11 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import recall_score, plot_confusion_matrix
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 # import fasttext
 from sklearn.ensemble import RandomForestClassifier
+import xgboost as xgb
 
 
 def train_models(path_train: str, path_test: str, is_stopwords: bool):
@@ -17,9 +19,9 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     df_test = pd.read_csv(path_test, encoding='utf-8')
 
     # df_train = pd.concat([df_train[df_train['Classificació'] == 'ESPORTS'], df_train[df_train['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_train[df_train['Classificació'] == 'POLÍTICA'], df_train[df_train['Classificació'] == 'SOCIETAT'], df_train[df_train['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_train[df_train['Classificació'] == 'FESTES I TRADICIONS']])
-    # df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
+    df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
     # df_test = pd.concat([df_test[df_test['Classificació'] == 'ESPORTS'], df_test[df_test['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_test[df_test['Classificació'] == 'POLÍTICA'], df_test[df_test['Classificació'] == 'SOCIETAT'], df_test[df_test['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_test[df_test['Classificació'] == 'FESTES I TRADICIONS']])
-    # df_test = df_test.sample(frac=1, random_state=42).reset_index(drop=True)
+    df_test = df_test.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # BAG OF WORDS
     count_vect = CountVectorizer()
@@ -35,6 +37,23 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
         print(f'Paraules uniques (AMB STOPWORDS): {x_train_tfidf.shape[1]}')
     else:
         print(f'Paraules uniques (SENSE STOPWORDS): {x_train_tfidf.shape[1]}')
+
+    # XGBoost
+    le = LabelEncoder()
+    le.fit(df_train['Classificació'].unique())
+
+    dtrain = xgb.DMatrix(x_train_tfidf, label=le.transform(df_train['Classificació']))
+    dtest = xgb.DMatrix(x_test_tfidf)
+    param = {}
+    param['eval_metric'] = 'auc'
+    evallist = [(dtest, 'eval'), (dtrain, 'train')]
+    num_round = 10
+    bst = xgb.train(param, dtrain, num_round, evallist)
+    y_pred = bst.predict(dtest)
+
+    print(f"XGBoost RECALL (macro): {recall_score(le.transform(df_test['Classificació']), y_pred, average='macro')}")
+    plot_confusion_matrix(bst, dtest, le.transform(df_test['Classificació']), include_values=False)
+    plt.show()
 
     # Random Forest
     rf = RandomForestClassifier()
