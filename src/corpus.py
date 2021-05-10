@@ -58,6 +58,10 @@ def stopwords_removal(txt):
         return txt
     else:
         txt = txt.lower()
+        txt = txt.replace('persona cargo informatius', '')
+        txt = txt.replace('persona cargo esports', '')
+        txt = txt.replace('new persona cargo', '')
+        txt = txt.replace('cargo informatius new', '')
         txt = txt.split()
         for stopword in CATALAN_STOPWORDS:
             txt = list(filter((stopword).__ne__, txt))

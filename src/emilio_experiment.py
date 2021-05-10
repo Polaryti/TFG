@@ -18,13 +18,13 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     df_train = pd.read_csv(path_train, encoding='utf-8')
     df_test = pd.read_csv(path_test, encoding='utf-8')
 
-    # df_train = pd.concat([df_train[df_train['Classificació'] == 'ESPORTS'], df_train[df_train['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_train[df_train['Classificació'] == 'POLÍTICA'], df_train[df_train['Classificació'] == 'SOCIETAT'], df_train[df_train['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_train[df_train['Classificació'] == 'FESTES I TRADICIONS']])
+    # df_train = pd.concat([df_train[df_train['Classificació'] == 'ESPORTS'], df_train[df_train['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_train[df_train['Classificació'] == 'POLÍTICA'], df_train[df_train['Classificació'] == 'SOCIETAT'], df_train[df_train['Classificació'] == 'ACCIDENTS I CATÀSTROFES'], df_train[df_train['Classificació'] == 'MEDICINA I SANITAT']])
     df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
-    # df_test = pd.concat([df_test[df_test['Classificació'] == 'ESPORTS'], df_test[df_test['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_test[df_test['Classificació'] == 'POLÍTICA'], df_test[df_test['Classificació'] == 'SOCIETAT'], df_test[df_test['Classificació'] == 'ACCIDENTS I CATÀSTROFE'], df_test[df_test['Classificació'] == 'FESTES I TRADICIONS']])
+    # df_test = pd.concat([df_test[df_test['Classificació'] == 'ESPORTS'], df_test[df_test['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_test[df_test['Classificació'] == 'POLÍTICA'], df_test[df_test['Classificació'] == 'SOCIETAT'], df_test[df_test['Classificació'] == 'ACCIDENTS I CATÀSTROFES'], df_test[df_test['Classificació'] == 'MEDICINA I SANITAT']])
     df_test = df_test.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # BAG OF WORDS
-    count_vect = CountVectorizer()
+    count_vect = CountVectorizer(ngram_range=(3, 3))
     count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
     x_counts = count_vect.transform(df_train['Description'])
     x_train_counts = count_vect.transform(df_train['Description'])
@@ -99,8 +99,10 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     # y_pred = clf.best_estimator_.predict(x_test_tfidf)
 
     print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
-    plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=True)
-    plt.show()
+    plot_confusion_matrix(sgd, X_test_tfidf, df_test['Classificació'], include_values=True)
+    # plt.show()
+
+    print(sgd._predict_proba(X_train_tfidf[0]))
 
 
 if __name__ == "__main__":
