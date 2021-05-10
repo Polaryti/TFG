@@ -72,6 +72,6 @@ print(recall_score(y_true, y_pred, average="macro"))
 #     print(f'{lasdas}')
 #     i += 1
 
-# # print(model.get_nearest_neighbors('paco'))
+# print(model.get_nearest_neighbors('paco'))
 # print(len(model.get_word_vector("valència")))
-# print(len(model.get_word_vector("alacant")))
+# print(len(model.get_word_vector("la ciutat de valència")))
