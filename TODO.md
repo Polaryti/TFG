@@ -45,8 +45,8 @@
 - [X] Revisar la SVM
 
 **Reunió 20/05/21**
-- [ ] Entrenar amb bi-grames *("hola que tal" -> " hola", "hola que", "que tal", "tal ")*
-- [ ] Llevar els trigrames repetits
+- [x] Entrenar amb bi-grames *("hola que tal" -> " hola", "hola que", "que tal", "tal ")*
+- [X] Llevar els trigrames repetits
 - [x] Probar i modificar la SVM
     - El problema era que agafava la representació CountVector en compte de la Tf-IDF
 - [ ] Comprobar si la classe correcta está en les 2-5 primeres classes
