@@ -6,7 +6,7 @@ import random
 
 generate_txt_file = False
 
-df = pd.read_csv(r'res/corpus_ambStopwords.csv', encoding="utf-8")
+df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 le = LabelEncoder()
 le.fit(df['Classificació'].unique())
 # print(f'Classess úniques: {len(le.classes_)}')
@@ -22,14 +22,14 @@ if generate_txt_file:
             samples_per_class[row["Classificació"]] = []
         samples_per_class[row["Classificació"]].append(row["Description"])
 
-    with open(r'data/FastText/corpus_ambStopwords_ft_train.txt', 'w', encoding="utf-8", newline='') as w_file:
+    with open(r'data/FastText/corpus_noStopwords_ft_train.txt', 'w', encoding="utf-8", newline='') as w_file:
         for key, value in samples_per_class.items():
             random.shuffle(value)
             for sample in value[:int(len(value) * (1 - test_split))]:
                 w_file.write(f'__label__{key} {sample}\n')
 
     y_true = []
-    with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'w', encoding="utf-8", newline='') as w_file:
+    with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'w', encoding="utf-8", newline='') as w_file:
         for key, value in samples_per_class.items():
             random.shuffle(value)
             for sample in value[int(len(value) * (1 - test_split)):]:
@@ -37,14 +37,18 @@ if generate_txt_file:
                 w_file.write(f'{sample}\n')
 
 
-model = fasttext.train_supervised(r'data/FastText/corpus_ambStopwords_ft_train.txt')
+# model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', dim=300, wordNgrams=2, epoch=10)
+model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', 
+    autotuneValidationFile=r'data/FastText/corpus_noStopwords_ft_test.txt',
+    autotuneDuration=300)
+
 
 print(len(model.words))
 print(len(model.labels))
 
 y_pred = []
 y_true = []
-with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'r') as test_file:
+with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r') as test_file:
     for line in test_file.readlines():
         line = line.replace('__label__', '')
         y_true.append(int(line[:2].strip()))
@@ -52,14 +56,18 @@ with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'r') as test_file:
 
 print(recall_score(y_true, y_pred, average="macro"))
 
-# print(model.predict(r'data/FastText/corpus_ambStopwords_ft_test.txt'))
+print(model.predict("consellera ha dit que guardia civil está fent tot que pot i més ja que"))
+print(model.predict("entrenador vcf"))
+print(model.predict("professorat universitat"))
+
+# print(model.predict(r'data/FastText/corpus_noStopwords_ft_test.txt'))
 
 # def print_results(N, p, r):
 #     print("N\t" + str(N))
 #     print("P@{}\t{:.3f}".format(1, p))
 #     print("R@{}\t{:.3f}".format(1, r))
 
-# print_results(*model.test(r'data/FastText/corpus_ambStopwords_ft_test.txt', k=1))
+# print_results(*model.test(r'data/FastText/corpus_noStopwords_ft_test.txt', k=1))
 
 # print(model.predict("justicia", k=3))
 # print(model.predict("paella", k=3))
