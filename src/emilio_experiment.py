@@ -47,13 +47,18 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     df_test = df_test.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # BAG OF WORDS
+    # count_vect = CountVectorizer(analyzer='char_wb', ngram_range=(1, 5))
     count_vect = CountVectorizer(ngram_range=(2, 2))
-    count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
+    # count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
+    count_vect.fit(df_train['Description'])
+
     x_counts = count_vect.transform(df_train['Description'])
     x_train_counts = count_vect.transform(df_train['Description'])
     x_test_counts = count_vect.transform(df_test['Description'])
+
     tfidf_transformer = TfidfTransformer()
     tfidf_transformer.fit(x_counts)
+
     x_train_tfidf = tfidf_transformer.transform(x_train_counts)
     x_test_tfidf = tfidf_transformer.transform(x_test_counts)
     if is_stopwords:
@@ -100,8 +105,8 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     clf = MultinomialNB()
     clf.fit(x_train_tfidf, df_train['Classificació'])
     y_pred = clf.predict(x_test_tfidf)
-    _ = clf.predict_proba([x_test_tfidf[0]])
-    print(scorer(clf.predict_proba(x_test_tfidf), y_pred, 5))
+    # _ = clf.predict_proba([x_test_tfidf[0]])
+    # print(scorer(clf.predict_proba(x_test_tfidf), y_pred, 5))
 
     print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
@@ -125,9 +130,9 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
 
     print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
     plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=True)
-    # plt.show()
+    plt.show()
 
-    print(sgd._predict_proba(x_train_tfidf[0]))
+    # print(sgd._predict_proba(x_train_tfidf[0]))
 
 
 if __name__ == "__main__":

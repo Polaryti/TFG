@@ -49,16 +49,23 @@
 - [X] Llevar els trigrames repetits
 - [x] Probar i modificar la SVM
     - El problema era que agafava la representació CountVector en compte de la Tf-IDF
-- [ ] Comprobar si la classe correcta está en les 2-5 primeres classes
-- [ ] FastText, veure amb model descarregat si es pot actualitzar i generar els embeddings amb aquest i el corpus d'APunt
+- [X] Comprobar si la classe correcta está en les 2-5 primeres classes
+- [X] FastText, veure amb model descarregat si es pot actualitzar i generar els embeddings amb aquest i el corpus d'APunt
 - [x] Repetir els experiments amb els mateixos corpus de test/train
     - Resultats en: https://docs.google.com/spreadsheets/d/19pMylt7uQ3ZM6gJ7z0eLV5R55Ust_B0nmb2yHvm_PLQ/edit?usp=sharing
-- [ ] Utilitzar els embeddings de FastText per al NB i la SVM
+- [X] Utilitzar els embeddings de FastText per al NB i la SVM
 
 **Reunió 03/06/21**
-
-
+- [ ] Usar get_sentence_vector() (FastText) 
+- [ ] decision_function() (SVM)
+- [ ] Analisis de recall i precisió per classe
+- [ ] Omplir taula de 4-6 classes per a FastText
+- [ ] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
+- [ ] Analisis del corpus de train entre solapament de bi-grames, tri-grames... entre classes
+- [ ] Augmentar els n-grames de n-diferents
+- [ ] Anar redactant
 
 **Per al futur...**
 - [ ] Demo de aplicació per a la defensa i periodistes
 - [ ] Gran experiment de Lluis
+- [ ] Possible experiment amb mayusculas y minusculas

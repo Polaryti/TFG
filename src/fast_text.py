@@ -42,7 +42,7 @@ model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.tx
 #                                   autotuneValidationFile=r'data/FastText/corpus_noStopwords_ft_test.txt',
 #                                   autotuneDuration=300)
 
-
+model.get_word_vector()
 # print(len(model.words))
 # print(len(model.labels))
 
