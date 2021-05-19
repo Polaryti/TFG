@@ -37,14 +37,14 @@ if generate_txt_file:
                 w_file.write(f'{sample}\n')
 
 
-# model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', dim=300, wordNgrams=2, epoch=10)
-model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', 
-    autotuneValidationFile=r'data/FastText/corpus_noStopwords_ft_test.txt',
-    autotuneDuration=300)
+model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', dim=300, wordNgrams=2, epoch=8, thread=2)
+# model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt',
+#                                   autotuneValidationFile=r'data/FastText/corpus_noStopwords_ft_test.txt',
+#                                   autotuneDuration=300)
 
 
-print(len(model.words))
-print(len(model.labels))
+# print(len(model.words))
+# print(len(model.labels))
 
 y_pred = []
 y_true = []
@@ -56,9 +56,10 @@ with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r') as test_file:
 
 print(recall_score(y_true, y_pred, average="macro"))
 
-print(model.predict("consellera ha dit que guardia civil está fent tot que pot i més ja que"))
+print(model.predict("banc espanya deficit"))
 print(model.predict("entrenador vcf"))
 print(model.predict("professorat universitat"))
+print(model.predict("falles declarades patrimoni inmaterial unesco"))
 
 # print(model.predict(r'data/FastText/corpus_noStopwords_ft_test.txt'))
 
