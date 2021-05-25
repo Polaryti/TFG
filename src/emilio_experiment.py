@@ -17,15 +17,15 @@ def scorer(x_test, y_test, n):
     scores = {}
     i = 0
     for y in y_test:
-        if y in x_test[i][:n]:
+        if y in sorted(range(len(x_test[i])), key=lambda k: x_test[i][k], reverse=True)[:n]:
             if y not in scores:
-                scores[y] = (1, 1)
+                scores[y] = [1, 1]
             else:
                 scores[y][0] += 1
                 scores[y][1] += 1
         else:
             if y not in scores:
-                scores[y] = (0, 1)
+                scores[y] = [0, 1]
             else:
                 scores[y][1] += 1
         i += 1
@@ -48,7 +48,7 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
 
     # BAG OF WORDS
     # count_vect = CountVectorizer(analyzer='char_wb', ngram_range=(1, 5))
-    count_vect = CountVectorizer(ngram_range=(2, 2))
+    count_vect = CountVectorizer(ngram_range=(3, 3))
     # count_vect.fit(pd.concat([df_train['Description'], df_test['Description']]))
     count_vect.fit(df_train['Description'])
 
@@ -130,7 +130,7 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
 
     print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
     plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=True)
-    plt.show()
+    # plt.show()
 
     # print(sgd._predict_proba(x_train_tfidf[0]))
 
