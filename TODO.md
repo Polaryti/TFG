@@ -65,6 +65,8 @@
 - [ ] Augmentar els n-grames de n-diferents
 - [ ] Anar redactant
 
+**Reunió 17/06/21**
+
 **Per al futur...**
 - [ ] Demo de aplicació per a la defensa i periodistes
 - [ ] Gran experiment de Lluis

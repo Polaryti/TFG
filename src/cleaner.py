@@ -133,6 +133,3 @@ def clean_all(sample):
 
 def clean_no_stopwords(sample):
     return preprocess_data(sample, True, False, True)
-
-
-print(clean_all("x<hh>"))
