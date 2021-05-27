@@ -56,11 +56,13 @@
 - [X] Utilitzar els embeddings de FastText per al NB i la SVM
 
 **Reunió 03/06/21**
-- [ ] Usar get_sentence_vector() (FastText) 
-- [ ] decision_function() (SVM)
+- [X] Usar get_sentence_vector() (FastText)
+    - El MultinomialNB no acepta entrades amb valors negatius i FastText en genera amb aquestos
+- [X] decision_function() (SVM)
+- [X] Revisas estadistiques del NB i SVM
 - [ ] Analisis de recall i precisió per classe
 - [ ] Omplir taula de 4-6 classes per a FastText
-- [ ] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
+- [X] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
 - [ ] Analisis del corpus de train entre solapament de bi-grames, tri-grames... entre classes
 - [ ] Augmentar els n-grames de n-diferents
 - [ ] Anar redactant
