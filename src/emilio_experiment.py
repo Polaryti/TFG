@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import recall_score, plot_confusion_matrix
+from sklearn.metrics import classification_report, plot_confusion_matrix, recall_score
 import matplotlib.pyplot as plt
 
 
@@ -35,7 +35,7 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     df_train = pd.read_csv(path_train, encoding='utf-8')
     df_test = pd.read_csv(path_test, encoding='utf-8')
 
-    case = '4'
+    case = 'ALL'
     if case == '4':
         df_train = pd.concat([df_train[df_train['Classificació'] == 'ESPORTS'], df_train[df_train['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_train[df_train['Classificació'] == 'POLÍTICA'], df_train[df_train['Classificació'] == 'SOCIETAT']])
         df_test = pd.concat([df_test[df_test['Classificació'] == 'ESPORTS'], df_test[df_test['Classificació'] == 'JUSTÍCIA I ORDRE  PÚBLIC'], df_test[df_test['Classificació'] == 'POLÍTICA'], df_test[df_test['Classificació'] == 'SOCIETAT']])
@@ -70,20 +70,24 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool):
     clf.fit(x_train_tfidf, df_train['Classificació'])
     y_pred = clf.predict(x_test_tfidf)
 
+    print(classification_report(df_test['Classificació'], y_pred))
+
     print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
-    plot_confusion_matrix(clf, x_test_tfidf, df_test['Classificació'], include_values=False)
-    plt.show()
+    plot_confusion_matrix(clf, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='all')
+    # plt.show()
 
     # SVM
     sgd = SGDClassifier()
     sgd.fit(x_train_tfidf, df_train['Classificació'])
     y_pred = sgd.predict(x_test_tfidf)
 
+    print(classification_report(df_test['Classificació'], y_pred))
+
     print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
-    plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=False)
-    plt.show()
+    plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='all')
+    # plt.show()
 
 
 if __name__ == "__main__":

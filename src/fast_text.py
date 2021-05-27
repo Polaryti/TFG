@@ -1,7 +1,7 @@
 import fasttext
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import recall_score, top_k_accuracy_score
+from sklearn.metrics import classification_report, recall_score, top_k_accuracy_score
 import random
 
 
@@ -48,7 +48,7 @@ if generate_txt_file:
                 w_file.write(f'{sample}\n')
 
 
-model = fasttext.train_supervised(r'data/FastText/corpus_ambStopwords_ft_train.txt', dim=300, wordNgrams=1, thread=3)#, wordNgrams=2, epoch=8, thread=2)
+model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt', dim=300, wordNgrams=1, thread=3)#, wordNgrams=2, epoch=8, thread=2)
 # model = fasttext.train_supervised(r'data/FastText/corpus_noStopwords_ft_train.txt',
 #                                   autotuneValidationFile=r'data/FastText/corpus_noStopwords_ft_test.txt',
 #                                   autotuneDuration=300)
@@ -60,7 +60,7 @@ model = fasttext.train_supervised(r'data/FastText/corpus_ambStopwords_ft_train.t
 y_pred = []
 y_true = []
 y_prob = []
-with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'r', encoding='utf-8') as test_file:
+with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'r', encoding='utf-8') as test_file:
     for line in test_file.readlines():
         line = line.replace('__label__', '')
         y_true.append(int(line[:2].strip()))
@@ -70,6 +70,8 @@ with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'r', encoding='utf-8
 print(recall_score(y_true, y_pred, average="macro"))
 
 print(top_k_accuracy_score(y_true, y_prob, k=2))
+
+print(classification_report(y_true, y_pred))
 
 # print(model.predict("banc espanya deficit"))
 # print(model.predict("entrenador vcf"))
