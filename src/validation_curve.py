@@ -16,7 +16,7 @@ vectorizer.fit(df['Description'])
 X = vectorizer.transform(df['Description'])
 y = df['Classificació']
 
-param_range = np.arange(0.0001, 0.01, 0.0004)
+param_range = np.arange(0.00001, 0.1, 0.00005)
 train_scores, test_scores = validation_curve(
     SGDClassifier(), X, y, param_name="alpha", param_range=param_range,
     scoring="recall_macro", n_jobs=-1)
@@ -25,7 +25,7 @@ train_scores_std = np.std(train_scores, axis=1)
 test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
-plt.title("Validation Curve with SVM")
+plt.title("Validation Curve con SVM")
 plt.xlabel(r"$\gamma$")
 plt.ylabel("Score")
 plt.ylim(0.0, 1.1)
