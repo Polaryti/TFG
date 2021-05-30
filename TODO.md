@@ -64,7 +64,8 @@
 - [ ] Omplir taula de 4-6 classes per a FastText
 - [X] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
 - [ ] Analisis del corpus de train entre solapament de bi-grames, tri-grames... entre classes
-- [ ] Augmentar els n-grames de n-diferents
+- [X] Augmentar els n-grames de n-diferents
+    - Dóna recall-macro menor al 5%
 - [ ] Anar redactant
 
 **Reunió 17/06/21**

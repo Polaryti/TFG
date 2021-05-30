@@ -10,10 +10,10 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
     if is_stopwords:
         prefix = f'(AMB STOPWORDS) ({n_grames}-grames)'
     else:
-        prefix = '(NO STOPWORDS) ({n_grames}-grames)'
+        prefix = f'(NO STOPWORDS) ({n_grames}-grames)'
     df_train = pd.read_csv(path_train, encoding='utf-8')
     df_test = pd.read_csv(path_test, encoding='utf-8')
-    model = fasttext.train_supervised(fastText_path, dim=300, wordNgrams=n_grames, verbose=0)
+    model = fasttext.train_supervised(fastText_path, dim=300, wordNgrams=n_grames, verbose=0, epoch=10)
     le = LabelEncoder()
     le.fit(df_train['Classificació'].unique())
 
@@ -22,15 +22,19 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
     for _, row in df_train.iterrows():
         x_train.append(model.get_sentence_vector(row['Description']))
         y_train.append(row['Classificació'])
+    del df_train
 
     x_test = []
     y_test = []
     for _, row in df_test.iterrows():
         x_test.append(model.get_sentence_vector(row['Description']))
         y_test.append(row['Classificació'])
+    del df_test
+
+    del model
 
     # SVM
-    sgd = SGDClassifier()
+    sgd = SGDClassifier(n_jobs=4)
     sgd.fit(x_train, y_train)
     y_pred = sgd.predict(x_test)
 
@@ -45,6 +49,14 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
     print(f"{prefix} SVM ACC@{3}: {top_k_accuracy_score(y_test, y_pred, k=3)}")
     print(f"{prefix} SVM ACC@{4}: {top_k_accuracy_score(y_test, y_pred, k=4)}")
     print(f"{prefix} SVM ACC@{5}: {top_k_accuracy_score(y_test, y_pred, k=5)}")
+
+    del le
+    del x_train
+    del x_test
+    del y_train
+    del y_test
+    del y_pred
+    del sgd
 
 
 if __name__ == "__main__":
