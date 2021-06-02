@@ -83,19 +83,43 @@ test_noStopwords['Classificació'] = le.transform(test_noStopwords['Classificaci
 train_noStopwords['Classificació'] = le.transform(train_noStopwords['Classificació'])
 
 with open(r'data/FastText/corpus_ambStopwords_ft_train.txt', 'w', encoding="utf-8", newline='') as w_file:
-    for _, row in train_ambStopwords.iterrows():
-        w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+    with open(r'data/FastText/corpus_ambStopwords_ft_train_4.txt', 'w', encoding="utf-8", newline='') as w_file_4:
+        with open(r'data/FastText/corpus_ambStopwords_ft_train_6.txt', 'w', encoding="utf-8", newline='') as w_file_6:
+            for _, row in train_ambStopwords.iterrows():
+                w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31):
+                    w_file_4.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31, 0, 22):
+                    w_file_6.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
 
 with open(r'data/FastText/corpus_ambStopwords_ft_test.txt', 'w', encoding="utf-8", newline='') as w_file:
-    for _, row in test_ambStopwords.iterrows():
-        w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+    with open(r'data/FastText/corpus_ambStopwords_ft_test_4.txt', 'w', encoding="utf-8", newline='') as w_file_4:
+        with open(r'data/FastText/corpus_ambStopwords_ft_test_6.txt', 'w', encoding="utf-8", newline='') as w_file_6:
+            for _, row in test_ambStopwords.iterrows():
+                w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31):
+                    w_file_4.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31, 0, 22):
+                    w_file_6.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
 
 with open(r'data/FastText/corpus_noStopwords_ft_train.txt', 'w', encoding="utf-8", newline='') as w_file:
-    for _, row in train_noStopwords.iterrows():
-        w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+    with open(r'data/FastText/corpus_noStopwords_ft_train_4.txt', 'w', encoding="utf-8", newline='') as w_file_4:
+        with open(r'data/FastText/corpus_noStopwords_ft_train_6.txt', 'w', encoding="utf-8", newline='') as w_file_6:
+            for _, row in train_noStopwords.iterrows():
+                w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31):
+                    w_file_4.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31, 0, 22):
+                    w_file_6.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
 
 with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'w', encoding="utf-8", newline='') as w_file:
-    for _, row in test_noStopwords.iterrows():
-        w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+    with open(r'data/FastText/corpus_noStopwords_ft_test_4.txt', 'w', encoding="utf-8", newline='') as w_file_4:
+        with open(r'data/FastText/corpus_noStopwords_ft_test_6.txt', 'w', encoding="utf-8", newline='') as w_file_6:
+            for _, row in test_noStopwords.iterrows():
+                w_file.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31):
+                    w_file_4.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
+                if row["Classificació"] in (13, 19, 27, 31, 0, 22):
+                    w_file_6.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
 
         

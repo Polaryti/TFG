@@ -61,11 +61,12 @@
 - [X] decision_function() (SVM)
 - [X] Revisas estadistiques del NB i SVM
 - [X] Analisis de recall i precisió per classe
-- [ ] Omplir taula de 4-6 classes per a FastText
+- [X] Omplir taula de 4-6 classes per a FastText
 - [X] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
 - [ ] Analisis del corpus de train entre solapament de bi-grames, tri-grames... entre classes
 - [X] Augmentar els n-grames de n-diferents
     - Dóna recall-macro menor al 5%
+- [X] EXTRA: Model Random Forest
 - [ ] Anar redactant
 
 **Reunió 17/06/21**

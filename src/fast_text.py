@@ -71,7 +71,7 @@ print(recall_score(y_true, y_pred, average="macro"))
 
 print(top_k_accuracy_score(y_true, y_prob, k=2))
 
-print(classification_report(y_true, y_pred))
+print(classification_report(y_true, y_pred, digits=4))
 
 # print(model.predict("banc espanya deficit"))
 # print(model.predict("entrenador vcf"))

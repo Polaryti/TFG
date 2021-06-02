@@ -1,8 +1,7 @@
 import fasttext
 import pandas as pd
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import recall_score, plot_confusion_matrix, top_k_accuracy_score, classification_report
-import matplotlib.pyplot as plt
+from sklearn.metrics import top_k_accuracy_score, classification_report
 from sklearn.preprocessing import LabelEncoder
 
 
