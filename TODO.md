@@ -62,11 +62,15 @@
 - [X] Revisas estadistiques del NB i SVM
 - [X] Analisis de recall i precisió per classe
 - [X] Omplir taula de 4-6 classes per a FastText
+    - https://docs.google.com/spreadsheets/d/19pMylt7uQ3ZM6gJ7z0eLV5R55Ust_B0nmb2yHvm_PLQ/edit#gid=0
 - [X] Comprobar si la classe correcta está en les 3-5 primeres classes (precissió)
-- [ ] Analisis del corpus de train entre solapament de bi-grames, tri-grames... entre classes
+    - https://docs.google.com/spreadsheets/d/1WHD3NEqWTpFQSira_odz3pWduxrdWKr_DZzMoMr1Uz8/edit#gid=0
+- [X] Analisis del corpus entre solapament de bi-grames, tri-grames... entre classes
 - [X] Augmentar els n-grames de n-diferents
-    - Dóna recall-macro menor al 5%
+    - Dóna recall macro menor al 5%
 - [X] EXTRA: Model Random Forest
+- [X] FE D'ERRATES: La primera columna es es LONGITUD MITJANA DEL TEXT EN PARAULES i la segona la LONGITUD MITJANA DE LES PARAULES. Aixo pot aclarir un poc més el perqué dels resultats amb tri-grames en tf-idf
+    - https://docs.google.com/spreadsheets/d/13Sr-PyTmuVoyc9GEWMpRGThmG-QIv-7nz0pC6QPkaLQ/edit#gid=0
 - [ ] Anar redactant
 
 **Reunió 17/06/21**
