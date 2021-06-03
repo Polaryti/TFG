@@ -56,6 +56,8 @@
 - [X] Utilitzar els embeddings de FastText per al NB i la SVM
 
 **Reunió 03/06/21**
+- [X] FE D'ERRATES: La primera columna es es LONGITUD MITJANA DEL TEXT EN PARAULES i la segona la LONGITUD MITJANA DE LES PARAULES. Aixo pot aclarir un poc més el perqué dels resultats amb tri-grames en tf-idf
+    - https://docs.google.com/spreadsheets/d/13Sr-PyTmuVoyc9GEWMpRGThmG-QIv-7nz0pC6QPkaLQ/edit#gid=0
 - [X] Usar get_sentence_vector() (FastText)
     - El MultinomialNB no acepta entrades amb valors negatius i FastText en genera amb aquestos
 - [X] decision_function() (SVM)
@@ -69,8 +71,6 @@
 - [X] Augmentar els n-grames de n-diferents
     - Dóna recall macro menor al 5%
 - [X] EXTRA: Model Random Forest
-- [X] FE D'ERRATES: La primera columna es es LONGITUD MITJANA DEL TEXT EN PARAULES i la segona la LONGITUD MITJANA DE LES PARAULES. Aixo pot aclarir un poc més el perqué dels resultats amb tri-grames en tf-idf
-    - https://docs.google.com/spreadsheets/d/13Sr-PyTmuVoyc9GEWMpRGThmG-QIv-7nz0pC6QPkaLQ/edit#gid=0
 - [ ] Anar redactant
 
 **Reunió 17/06/21**

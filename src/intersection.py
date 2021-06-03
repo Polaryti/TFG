@@ -14,7 +14,7 @@ def get_top_ngram(corpus, n=None):
 
 
 def compute_info(classification, df):
-    a = get_top_ngram(df['Description'], 1)
+    a = get_top_ngram(df['Description'], 3)
     a = [item[0] for item in a]
     stats[classification] = set(a)
 
@@ -26,7 +26,7 @@ def get_unique(classification):
             for v in values:
                 aux.add(v)
 
-    print(len(stats[classification]), len(stats[classification].difference(aux)))
+    print(classification, len(stats[classification]), len(stats[classification].difference(aux)))
 
 
 if __name__ == "__main__":
