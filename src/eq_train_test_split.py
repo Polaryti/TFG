@@ -1,6 +1,7 @@
+import random
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-import random
 
 df_ambStopwords = pd.read_csv(r'res/corpus_ambStopwords.csv', encoding="utf-8")
 df_noStopwords = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
@@ -121,5 +122,3 @@ with open(r'data/FastText/corpus_noStopwords_ft_test.txt', 'w', encoding="utf-8"
                     w_file_4.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
                 if row["Classificació"] in (13, 19, 27, 31, 0, 22):
                     w_file_6.write(f'__label__{row["Classificació"]} {row["Description"]}\n')
-
-        

@@ -1,10 +1,10 @@
-from sklearn.ensemble import RandomForestClassifier
-import pandas as pd
-from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import recall_score, plot_confusion_matrix, top_k_accuracy_score, classification_report
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder
 import fasttext
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (classification_report, plot_confusion_matrix,
+                             recall_score, top_k_accuracy_score)
+from sklearn.preprocessing import LabelEncoder
 
 
 def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwords: bool, n_grames: int):
@@ -34,14 +34,14 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
 
     del model
 
-    # RandomForest
+    # Random Forests
     rf = RandomForestClassifier()
     rf.fit(x_train, y_train)
     y_pred = rf.predict(x_test)
 
-    # print(f"{prefix} SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
-    # plot_confusion_matrix(rf, x_test, y_test, include_values=False, normalize='all')
-    # plt.show()
+    print(f"{prefix} SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    plot_confusion_matrix(rf, x_test, y_test, include_values=False, normalize='true', xticks_rotation='vertical')
+    plt.show()
 
     print(classification_report(y_test, y_pred, zero_division=0, digits=3))
     y_test = le.transform(y_test)

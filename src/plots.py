@@ -1,10 +1,11 @@
-import pandas as pd
-from envar import PROCESED_DATA_FULL_STOPWORDS, PROCESED_DATA_FULL
-import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
 from wordcloud import WordCloud
+
+from envar import PROCESED_DATA_FULL, PROCESED_DATA_FULL_STOPWORDS
 
 
 def get_top_ngram(corpus, n=None):

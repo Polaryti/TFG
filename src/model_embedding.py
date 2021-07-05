@@ -1,7 +1,9 @@
 import fasttext
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import top_k_accuracy_score, classification_report
+from sklearn.metrics import (classification_report, plot_confusion_matrix,
+                             top_k_accuracy_score, recall_score)
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -47,9 +49,9 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
     sgd.fit(x_train, y_train)
     y_pred = sgd.predict(x_test)
 
-    # print(f"{prefix} SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
-    # plot_confusion_matrix(sgd, x_test, y_test, include_values=False, normalize='all')
-    # plt.show()
+    print(f"{prefix} SVM RECALL (macro): {recall_score(y_test, y_pred, average='macro')}")
+    plot_confusion_matrix(sgd, x_test, y_test, include_values=False, normalize='true', xticks_rotation='vertical')
+    plt.show()
 
     print(classification_report(y_test, y_pred, zero_division=0, digits=4))
     y_test = le.transform(y_test)
@@ -70,7 +72,7 @@ def train_models(path_train: str, path_test: str, fastText_path: str, is_stopwor
 
 
 if __name__ == "__main__":
-    for c in ('4', '6'):
-        for i in (1, 2, 3):
+    for c in ['38']:
+        for i in [1]:
             train_models(r'res/corpus_ambStopwords_train.csv', r'res/corpus_ambStopwords_test.csv', r'data/FastText/corpus_ambStopwords_ft_train.txt', True, i, c)
             train_models(r'res/corpus_noStopwords_train.csv', r'res/corpus_noStopwords_test.csv', r'data/FastText/corpus_noStopwords_ft_train.txt', False, i, c)

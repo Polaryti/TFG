@@ -1,6 +1,8 @@
-import os
-import pandas as pd
 import csv
+import os
+
+import pandas as pd
+
 from cleaner import clean_all, clean_no_stopwords
 
 if __name__ == "__main__":

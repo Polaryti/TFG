@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -39,8 +38,8 @@ if __name__ == "__main__":
     for cla in df['Classificació'].unique():
         get_unique(cla)
 
-    # stats = {}
-    # df = pd.read_csv(r'res/corpus_ambStopwords.csv', encoding="utf-8")
+    stats = {}
+    df = pd.read_csv(r'res/corpus_ambStopwords.csv', encoding="utf-8")
 
-    # for cla in df['Classificació'].unique():
-    #     compute_info(cla, df[df['Classificació'] == cla], False, 12)
+    for cla in df['Classificació'].unique():
+        compute_info(cla, df[df['Classificació'] == cla], False, 12)

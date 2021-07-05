@@ -1,9 +1,8 @@
-import pandas as pd
-import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
 from datetime import datetime
-# from joblib import Parallel, delayed
-# import multiprocessing
+
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
 stats_with_stopwords = {}
 stats_without_stopwords = {}
@@ -39,7 +38,6 @@ def compute_info(classification, df, noStopwords, number_n_grama):
 
 
 if __name__ == "__main__":
-    # num_cores = multiprocessing.cpu_count() - 1
     df = pd.read_csv(r'res/corpus_noStopwords.csv', encoding="utf-8")
 
     for cla in df['Classificació'].unique():
@@ -47,7 +45,7 @@ if __name__ == "__main__":
 
     with open(r'res/stats_noStopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         w_file.write(
-            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama')  # ,1_grama,2_grama,3_grama\n')
+            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama')
         for key, value in stats_without_stopwords.items():
             w_file.write(f'\n"{key}"')
             for v in stats_without_stopwords[key].values():
@@ -60,7 +58,7 @@ if __name__ == "__main__":
 
     with open(r'res/stats_ambStopwords.csv', 'w', encoding="utf-8", newline='') as w_file:
         w_file.write(
-            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama')  # ,1_grama,2_grama,3_grama\n')
+            'class,mean_len_txts,mean_len_words,1_grama,2_grama,3_grama')
         for key, value in stats_with_stopwords.items():
             w_file.write(f'\n"{key}"')
             for v in stats_with_stopwords[key].values():

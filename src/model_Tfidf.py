@@ -1,10 +1,10 @@
-import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import classification_report, plot_confusion_matrix, recall_score
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import (classification_report, plot_confusion_matrix,
+                             recall_score)
+from sklearn.naive_bayes import MultinomialNB
 
 
 def train_models(path_train: str, path_test: str, is_stopwords: bool, n_grames: int, n_clases: str):
@@ -27,7 +27,6 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool, n_grames: 
 
     # BAG OF WORDS
     vectorizer = TfidfVectorizer(ngram_range=(n_grames, n_grames))
-    # vectorizer = TfidfVectorizer((analyzer='char_wb', ngram_range=(1, 5))
     vectorizer.fit(df_train['Description'])
 
     x_train_tfidf = vectorizer.transform(df_train['Description'])
@@ -41,10 +40,10 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool, n_grames: 
     print(f'NB {prefix}')
     print(classification_report(df_test['Classificació'], y_pred, zero_division=0, digits=3))
 
-    # print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
+    print(f"NB RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
-    # plot_confusion_matrix(clf, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='all')
-    # plt.show()
+    plot_confusion_matrix(clf, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='true', xticks_rotation='vertical')
+    plt.show()
 
     # SVM
     sgd = SGDClassifier()
@@ -54,14 +53,14 @@ def train_models(path_train: str, path_test: str, is_stopwords: bool, n_grames: 
     print(f'SVM {prefix}')
     print(classification_report(df_test['Classificació'], y_pred, zero_division=0, digits=3))
 
-    # print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
+    print(f"SVM RECALL (macro): {recall_score(df_test['Classificació'], y_pred, average='macro')}")
 
-    # plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='all')
-    # plt.show()
+    plot_confusion_matrix(sgd, x_test_tfidf, df_test['Classificació'], include_values=False, normalize='true', xticks_rotation='vertical')
+    plt.show()
 
 
 if __name__ == "__main__":
-    for c in ('4', '6', '38'):
-        for i in (1, 2, 3):
+    for c in ('6'):
+        for i in [1]:
             train_models(r'res/corpus_ambStopwords_train.csv', r'res/corpus_ambStopwords_test.csv', True, i, c)
             train_models(r'res/corpus_noStopwords_train.csv', r'res/corpus_noStopwords_test.csv', False, i, c)

@@ -76,7 +76,7 @@
 **Reunió 17/06/21**
 - [X] Embeddings per a 4 y 6 classes
 - [ ] Prova Canal 9 vs APunt
-- [ ] Averiguar buides ¿?
+- [X] Averiguar buides ¿?
 
 **Per al futur...**
 - [ ] Demo de aplicació per a la defensa i periodistes

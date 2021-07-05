@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import validation_curve
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 df = pd.read_csv(r'res\corpus_noStopwords.csv', encoding='utf-8')
 
